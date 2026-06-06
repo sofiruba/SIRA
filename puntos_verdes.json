@@ -1,0 +1,587 @@
+[
+  {
+    "id": 1,
+    "nombre": "Estacion Lugano",
+    "residuos_aceptados": ["R7", "R8", "R9"],
+    "horario": {
+      "dias": ["Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
+      "apertura": "14:00",
+      "cierre": "19:00"
+    },
+    "direccion": "Murguiondo 4121",
+    "barrio": "Villa Lugano",
+    "comuna": "Comuna 8"
+  },
+  {
+    "id": 2,
+    "nombre": "Estacion Flores",
+    "residuos_aceptados": ["R1", "R4", "R12"],
+    "horario": {
+      "dias": ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"],
+      "apertura": "09:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Av. Rivadavia 7200",
+    "barrio": "Flores",
+    "comuna": "Comuna 7"
+  },
+  {
+    "id": 3,
+    "nombre": "Estacion Palermo",
+    "residuos_aceptados": ["R2", "R5", "R10", "R14"],
+    "horario": {
+      "dias": ["Martes", "Jueves", "Sabado"],
+      "apertura": "10:00",
+      "cierre": "17:00"
+    },
+    "direccion": "Av. Santa Fe 5100",
+    "barrio": "Palermo",
+    "comuna": "Comuna 14"
+  },
+  {
+    "id": 4,
+    "nombre": "Estacion Caballito",
+    "residuos_aceptados": ["R3", "R6", "R11"],
+    "horario": {
+      "dias": ["Lunes", "Miercoles", "Viernes"],
+      "apertura": "08:30",
+      "cierre": "16:30"
+    },
+    "direccion": "Av. La Plata 600",
+    "barrio": "Caballito",
+    "comuna": "Comuna 6"
+  },
+  {
+    "id": 5,
+    "nombre": "Estacion Belgrano",
+    "residuos_aceptados": ["R8", "R13", "R15"],
+    "horario": {
+      "dias": ["Martes", "Miercoles", "Jueves", "Viernes"],
+      "apertura": "09:30",
+      "cierre": "18:30"
+    },
+    "direccion": "Juramento 2500",
+    "barrio": "Belgrano",
+    "comuna": "Comuna 13"
+  },
+  {
+    "id": 6,
+    "nombre": "Estacion Almagro",
+    "residuos_aceptados": ["R1", "R7", "R16"],
+    "horario": {
+      "dias": ["Lunes", "Martes", "Jueves", "Sabado"],
+      "apertura": "11:00",
+      "cierre": "19:00"
+    },
+    "direccion": "Av. Corrientes 4100",
+    "barrio": "Almagro",
+    "comuna": "Comuna 5"
+  },
+  {
+    "id": 7,
+    "nombre": "Estacion Recoleta",
+    "residuos_aceptados": ["R2", "R4", "R9", "R15"],
+    "horario": {
+      "dias": ["Miercoles", "Jueves", "Viernes", "Sabado"],
+      "apertura": "10:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Av. Pueyrredon 1800",
+    "barrio": "Recoleta",
+    "comuna": "Comuna 2"
+  },
+  {
+    "id": 8,
+    "nombre": "Estacion Barracas",
+    "residuos_aceptados": ["R5", "R10", "R12"],
+    "horario": {
+      "dias": ["Lunes", "Martes", "Miercoles", "Viernes"],
+      "apertura": "08:00",
+      "cierre": "15:00"
+    },
+    "direccion": "Montes de Oca 1200",
+    "barrio": "Barracas",
+    "comuna": "Comuna 4"
+  },
+  {
+    "id": 9,
+    "nombre": "Estacion Mataderos",
+    "residuos_aceptados": ["R3", "R6", "R13", "R14"],
+    "horario": {
+      "dias": ["Martes", "Jueves", "Sabado"],
+      "apertura": "09:00",
+      "cierre": "17:00"
+    },
+    "direccion": "Av. Juan B. Alberdi 6500",
+    "barrio": "Mataderos",
+    "comuna": "Comuna 9"
+  },
+  {
+    "id": 10,
+    "nombre": "Estacion Nuñez",
+    "residuos_aceptados": ["R1", "R8", "R11", "R16"],
+    "horario": {
+      "dias": ["Lunes", "Miercoles", "Viernes", "Sabado"],
+      "apertura": "10:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Av. Cabildo 4200",
+    "barrio": "Nuñez",
+    "comuna": "Comuna 13"
+  },
+  {
+    "id": 11,
+    "nombre": "Punto Verde Parque Chacabuco",
+    "residuos_aceptados": ["R2", "R5", "R8", "R14"],
+    "horario": {
+      "dias": ["Martes", "Miercoles", "Viernes", "Sabado"],
+      "apertura": "09:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Av. Asamblea 1300",
+    "barrio": "Parque Chacabuco",
+    "comuna": "Comuna 7"
+  },
+  {
+    "id": 12,
+    "nombre": "Centro de Reciclaje Saavedra",
+    "residuos_aceptados": ["R1", "R6", "R10", "R15"],
+    "horario": {
+      "dias": ["Lunes", "Martes", "Jueves", "Viernes"],
+      "apertura": "08:00",
+      "cierre": "17:00"
+    },
+    "direccion": "Av. Balbin 4200",
+    "barrio": "Saavedra",
+    "comuna": "Comuna 12"
+  },
+  {
+    "id": 13,
+    "nombre": "EcoPunto Villa Urquiza",
+    "residuos_aceptados": ["R3", "R7", "R12"],
+    "horario": {
+      "dias": ["Miercoles", "Jueves", "Sabado"],
+      "apertura": "10:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Triunvirato 5000",
+    "barrio": "Villa Urquiza",
+    "comuna": "Comuna 12"
+  },
+  {
+    "id": 14,
+    "nombre": "Punto Verde Costanera Norte",
+    "residuos_aceptados": ["R4", "R9", "R11", "R16"],
+    "horario": {
+      "dias": ["Lunes", "Miercoles", "Viernes", "Domingo"],
+      "apertura": "09:00",
+      "cierre": "19:00"
+    },
+    "direccion": "Av. Costanera Rafael Obligado 2100",
+    "barrio": "Palermo",
+    "comuna": "Comuna 14"
+  },
+  {
+    "id": 15,
+    "nombre": "Centro Ambiental Constitucion",
+    "residuos_aceptados": ["R2", "R8", "R13"],
+    "horario": {
+      "dias": ["Martes", "Jueves", "Viernes"],
+      "apertura": "08:30",
+      "cierre": "16:30"
+    },
+    "direccion": "Lima 1500",
+    "barrio": "Constitucion",
+    "comuna": "Comuna 1"
+  },
+  {
+    "id": 16,
+    "nombre": "Punto Verde Plaza Irlanda",
+    "residuos_aceptados": ["R1", "R5", "R10", "R14"],
+    "horario": {
+      "dias": ["Lunes", "Miercoles", "Sabado"],
+      "apertura": "10:00",
+      "cierre": "17:00"
+    },
+    "direccion": "Av. Gaona 2400",
+    "barrio": "Caballito",
+    "comuna": "Comuna 6"
+  },
+  {
+    "id": 17,
+    "nombre": "Centro de Recuperacion de Materiales Boedo",
+    "residuos_aceptados": ["R6", "R7", "R15"],
+    "horario": {
+      "dias": ["Martes", "Miercoles", "Jueves", "Viernes"],
+      "apertura": "09:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Av. Boedo 900",
+    "barrio": "Boedo",
+    "comuna": "Comuna 5"
+  },
+  {
+    "id": 18,
+    "nombre": "EcoCentro Villa Devoto",
+    "residuos_aceptados": ["R3", "R4", "R11", "R16"],
+    "horario": {
+      "dias": ["Lunes", "Martes", "Jueves", "Sabado"],
+      "apertura": "08:00",
+      "cierre": "16:00"
+    },
+    "direccion": "Av. Beiro 4600",
+    "barrio": "Villa Devoto",
+    "comuna": "Comuna 11"
+  },
+  {
+    "id": 19,
+    "nombre": "Punto Verde Parque Avellaneda",
+    "residuos_aceptados": ["R2", "R9", "R12", "R13"],
+    "horario": {
+      "dias": ["Miercoles", "Viernes", "Sabado"],
+      "apertura": "09:30",
+      "cierre": "18:30"
+    },
+    "direccion": "Av. Directorio 4000",
+    "barrio": "Parque Avellaneda",
+    "comuna": "Comuna 9"
+  },
+  {
+    "id": 20,
+    "nombre": "Centro de Reciclaje San Cristobal",
+    "residuos_aceptados": ["R1", "R5", "R8", "R10", "R14"],
+    "horario": {
+      "dias": ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"],
+      "apertura": "08:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Av. San Juan 2500",
+    "barrio": "San Cristobal",
+    "comuna": "Comuna 3"
+  },
+  {
+    "id": 21,
+    "nombre": "Punto Verde Parque Centenario",
+    "residuos_aceptados": ["R1", "R4", "R7", "R15"],
+    "horario": {
+      "dias": ["Martes", "Jueves", "Sabado"],
+      "apertura": "09:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Av. angel Gallardo 900",
+    "barrio": "Caballito",
+    "comuna": "Comuna 6"
+  },
+  {
+    "id": 22,
+    "nombre": "EcoPunto Retiro",
+    "residuos_aceptados": ["R2", "R8", "R11", "R16"],
+    "horario": {
+      "dias": ["Lunes", "Miercoles", "Viernes"],
+      "apertura": "08:30",
+      "cierre": "17:30"
+    },
+    "direccion": "Av. del Libertador 100",
+    "barrio": "Retiro",
+    "comuna": "Comuna 1"
+  },
+  {
+    "id": 23,
+    "nombre": "Centro Verde Colegiales",
+    "residuos_aceptados": ["R3", "R5", "R9", "R13"],
+    "horario": {
+      "dias": ["Martes", "Miercoles", "Jueves", "Sabado"],
+      "apertura": "10:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Av. alvarez Thomas 1200",
+    "barrio": "Colegiales",
+    "comuna": "Comuna 13"
+  },
+  {
+    "id": 24,
+    "nombre": "Centro de Reciclaje Villa Crespo",
+    "residuos_aceptados": ["R6", "R10", "R12", "R14"],
+    "horario": {
+      "dias": ["Lunes", "Martes", "Jueves", "Viernes"],
+      "apertura": "08:00",
+      "cierre": "16:00"
+    },
+    "direccion": "Av. Corrientes 5400",
+    "barrio": "Villa Crespo",
+    "comuna": "Comuna 15"
+  },
+  {
+    "id": 25,
+    "nombre": "Estacion Ambiental Floresta",
+    "residuos_aceptados": ["R1", "R7", "R11"],
+    "horario": {
+      "dias": ["Miercoles", "Viernes", "Sabado"],
+      "apertura": "09:00",
+      "cierre": "17:00"
+    },
+    "direccion": "Av. Rivadavia 8500",
+    "barrio": "Floresta",
+    "comuna": "Comuna 10"
+  },
+  {
+    "id": 26,
+    "nombre": "Punto Verde Puerto Madero",
+    "residuos_aceptados": ["R2", "R4", "R8", "R15", "R16"],
+    "horario": {
+      "dias": ["Lunes", "Miercoles", "Viernes", "Domingo"],
+      "apertura": "10:00",
+      "cierre": "20:00"
+    },
+    "direccion": "Juana Manso 1100",
+    "barrio": "Puerto Madero",
+    "comuna": "Comuna 1"
+  },
+  {
+    "id": 27,
+    "nombre": "Centro de Economia Circular Chacarita",
+    "residuos_aceptados": ["R3", "R5", "R10", "R13"],
+    "horario": {
+      "dias": ["Martes", "Jueves", "Sabado"],
+      "apertura": "09:30",
+      "cierre": "18:30"
+    },
+    "direccion": "Av. Guzman 800",
+    "barrio": "Chacarita",
+    "comuna": "Comuna 15"
+  },
+  {
+    "id": 28,
+    "nombre": "EcoCentro Monte Castro",
+    "residuos_aceptados": ["R6", "R9", "R12", "R14"],
+    "horario": {
+      "dias": ["Lunes", "Miercoles", "Viernes"],
+      "apertura": "08:00",
+      "cierre": "15:00"
+    },
+    "direccion": "Av. alvarez Jonte 4700",
+    "barrio": "Monte Castro",
+    "comuna": "Comuna 10"
+  },
+  {
+    "id": 29,
+    "nombre": "Punto Verde Parque Patricios",
+    "residuos_aceptados": ["R1", "R2", "R7", "R8", "R15"],
+    "horario": {
+      "dias": ["Martes", "Miercoles", "Jueves", "Viernes"],
+      "apertura": "09:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Av. Caseros 3000",
+    "barrio": "Parque Patricios",
+    "comuna": "Comuna 4"
+  },
+  {
+    "id": 30,
+    "nombre": "Centro Integral de Reciclaje Villa Pueyrredon",
+    "residuos_aceptados": ["R4", "R5", "R11", "R13", "R16"],
+    "horario": {
+      "dias": ["Lunes", "Martes", "Jueves", "Sabado"],
+      "apertura": "08:30",
+      "cierre": "17:30"
+    },
+    "direccion": "Nazca 2500",
+    "barrio": "Villa Pueyrredon",
+    "comuna": "Comuna 12"
+  },
+  {
+    "id": 31,
+    "nombre": "Punto Verde Versalles",
+    "residuos_aceptados": ["R2", "R6", "R9", "R14"],
+    "horario": {
+      "dias": ["Lunes", "Miercoles", "Viernes"],
+      "apertura": "09:00",
+      "cierre": "17:00"
+    },
+    "direccion": "Arregui 6400",
+    "barrio": "Versalles",
+    "comuna": "Comuna 10"
+  },
+  {
+    "id": 32,
+    "nombre": "EcoCentro Villa Real",
+    "residuos_aceptados": ["R1", "R5", "R8", "R12"],
+    "horario": {
+      "dias": ["Martes", "Jueves", "Sabado"],
+      "apertura": "08:30",
+      "cierre": "16:30"
+    },
+    "direccion": "Av. Lope de Vega 2200",
+    "barrio": "Villa Real",
+    "comuna": "Comuna 10"
+  },
+  {
+    "id": 33,
+    "nombre": "Centro de Reciclaje Villa del Parque",
+    "residuos_aceptados": ["R3", "R7", "R10", "R15"],
+    "horario": {
+      "dias": ["Lunes", "Martes", "Miercoles", "Viernes"],
+      "apertura": "09:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Cuenca 2800",
+    "barrio": "Villa del Parque",
+    "comuna": "Comuna 11"
+  },
+  {
+    "id": 34,
+    "nombre": "Punto Verde Parque Lezama",
+    "residuos_aceptados": ["R4", "R8", "R11", "R16"],
+    "horario": {
+      "dias": ["Miercoles", "Viernes", "Sabado", "Domingo"],
+      "apertura": "10:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Martin Garcia 300",
+    "barrio": "San Telmo",
+    "comuna": "Comuna 1"
+  },
+  {
+    "id": 35,
+    "nombre": "Centro Ambiental Agronomia",
+    "residuos_aceptados": ["R2", "R5", "R13", "R14"],
+    "horario": {
+      "dias": ["Lunes", "Miercoles", "Jueves"],
+      "apertura": "08:00",
+      "cierre": "16:00"
+    },
+    "direccion": "Av. San Martin 4400",
+    "barrio": "Agronomia",
+    "comuna": "Comuna 15"
+  },
+  {
+    "id": 36,
+    "nombre": "EcoPunto Villa Ortuzar",
+    "residuos_aceptados": ["R1", "R6", "R9", "R12", "R15"],
+    "horario": {
+      "dias": ["Martes", "Jueves", "Sabado"],
+      "apertura": "09:30",
+      "cierre": "17:30"
+    },
+    "direccion": "Av. de los Incas 3800",
+    "barrio": "Villa Ortuzar",
+    "comuna": "Comuna 15"
+  },
+  {
+    "id": 37,
+    "nombre": "Centro de Recuperacion Urbana Once",
+    "residuos_aceptados": ["R3", "R7", "R10", "R16"],
+    "horario": {
+      "dias": ["Lunes", "Martes", "Jueves", "Viernes"],
+      "apertura": "08:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Pueyrredon 500",
+    "barrio": "Balvanera",
+    "comuna": "Comuna 3"
+  },
+  {
+    "id": 38,
+    "nombre": "Punto Verde Barrancas de Belgrano",
+    "residuos_aceptados": ["R2", "R4", "R8", "R11"],
+    "horario": {
+      "dias": ["Miercoles", "Viernes", "Sabado"],
+      "apertura": "10:00",
+      "cierre": "19:00"
+    },
+    "direccion": "Juramento 1600",
+    "barrio": "Belgrano",
+    "comuna": "Comuna 13"
+  },
+  {
+    "id": 39,
+    "nombre": "EcoCentro Nueva Pompeya",
+    "residuos_aceptados": ["R5", "R6", "R13", "R14", "R15"],
+    "horario": {
+      "dias": ["Lunes", "Miercoles", "Viernes"],
+      "apertura": "08:30",
+      "cierre": "16:30"
+    },
+    "direccion": "Saenz 1200",
+    "barrio": "Nueva Pompeya",
+    "comuna": "Comuna 4"
+  },
+  {
+    "id": 40,
+    "nombre": "Centro Integral de Economia Circular Liniers",
+    "residuos_aceptados": ["R1", "R3", "R7", "R10", "R16"],
+    "horario": {
+      "dias": ["Martes", "Jueves", "Sabado"],
+      "apertura": "09:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Av. Rivadavia 11400",
+    "barrio": "Liniers",
+    "comuna": "Comuna 9"
+  },
+  {
+    "id": 41,
+    "nombre": "Punto Verde Coghlan",
+    "residuos_aceptados": ["R2", "R5", "R8", "R13"],
+    "horario": {
+      "dias": ["Lunes", "Miercoles", "Viernes", "Sabado"],
+      "apertura": "09:00",
+      "cierre": "17:00"
+    },
+    "direccion": "Av. Monroe 3400",
+    "barrio": "Coghlan",
+    "comuna": "Comuna 12"
+  },
+  {
+    "id": 42,
+    "nombre": "EcoCentro Parque Chas",
+    "residuos_aceptados": ["R1", "R4", "R9", "R15"],
+    "horario": {
+      "dias": ["Martes", "Jueves", "Sabado"],
+      "apertura": "08:30",
+      "cierre": "16:30"
+    },
+    "direccion": "Av. de los Constituyentes 1800",
+    "barrio": "Parque Chas",
+    "comuna": "Comuna 15"
+  },
+  {
+    "id": 43,
+    "nombre": "Centro de Reciclaje Villa Santa Rita",
+    "residuos_aceptados": ["R3", "R6", "R10", "R14", "R16"],
+    "horario": {
+      "dias": ["Lunes", "Martes", "Jueves", "Viernes"],
+      "apertura": "08:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Nazca 1700",
+    "barrio": "Villa Santa Rita",
+    "comuna": "Comuna 11"
+  },
+  {
+    "id": 44,
+    "nombre": "Estacion Ambiental Villa General Mitre",
+    "residuos_aceptados": ["R2", "R7", "R11", "R12"],
+    "horario": {
+      "dias": ["Miercoles", "Viernes", "Sabado"],
+      "apertura": "09:30",
+      "cierre": "17:30"
+    },
+    "direccion": "Av. Juan B. Justo 5200",
+    "barrio": "Villa General Mitre",
+    "comuna": "Comuna 11"
+  },
+  {
+    "id": 45,
+    "nombre": "Centro Integral de Reciclaje Parque Rivadavia",
+    "residuos_aceptados": ["R1", "R5", "R8", "R13", "R15"],
+    "horario": {
+      "dias": ["Lunes", "Miercoles", "Jueves", "Sabado"],
+      "apertura": "09:00",
+      "cierre": "18:00"
+    },
+    "direccion": "Av. Rivadavia 4900",
+    "barrio": "Caballito",
+    "comuna": "Comuna 6"
+  }
+]

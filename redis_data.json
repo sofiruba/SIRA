@@ -5,316 +5,271 @@
     "_id": 1,
     "estado": "disponible",
     "capacidad_actual": 30,
-    "ultima_actualizacion": "2026-01-27 T03:37:03",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-01-27 T03:37:03"
   },
   {
     "_id": 2,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 48,
-    "ultima_actualizacion": "2026-03-29 T04:35:57",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-03-29 T04:35:57"
   },
   {
     "_id": 3,
     "estado": "saturado",
     "capacidad_actual": 56,
-    "ultima_actualizacion": "2026-03-27 T12:18:13",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-03-27 T12:18:13"
   },
   {
     "_id": 4,
     "estado": "disponible",
     "capacidad_actual": 46,
-    "ultima_actualizacion": "2026-05-23 T04:25:47",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-05-23 T04:25:47"
   },
   {
     "_id": 5,
     "estado": "disponible",
     "capacidad_actual": 13,
-    "ultima_actualizacion": "2026-02-23 T03:46:03",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-02-23 T03:46:03"
   },
   {
     "_id": 6,
     "estado": "disponible",
     "capacidad_actual": 30,
-    "ultima_actualizacion": "2026-02-25 T12:15:47",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-02-25 T12:15:47"
   },
   {
     "_id": 7,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 84,
-    "ultima_actualizacion": "2026-04-14 T11:46:20",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-04-14 T11:46:20"
   },
   {
     "_id": 8,
     "estado": "saturado",
     "capacidad_actual": 1,
-    "ultima_actualizacion": "2026-03-30 T11:16:37",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-03-30 T11:16:37"
   },
   {
     "_id": 9,
     "estado": "saturado",
     "capacidad_actual": 36,
-    "ultima_actualizacion": "2026-05-07 T02:48:52",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-05-07 T02:48:52"
   },
   {
     "_id": 10,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 61,
-    "ultima_actualizacion": "2026-01-13 T09:48:33",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-01-13 T09:48:33"
   },
   {
     "_id": 11,
     "estado": "disponible",
     "capacidad_actual": 50,
-    "ultima_actualizacion": "2026-02-28 T07:10:22",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-02-28 T07:10:22"
   },
   {
     "_id": 12,
     "estado": "disponible",
     "capacidad_actual": 83,
-    "ultima_actualizacion": "2026-01-20 T12:50:15",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-01-20 T12:50:15"
   },
   {
     "_id": 13,
     "estado": "disponible",
     "capacidad_actual": 1,
-    "ultima_actualizacion": "2026-04-23 T05:06:09",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-04-23 T05:06:09"
   },
   {
     "_id": 14,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 31,
-    "ultima_actualizacion": "2026-03-17 T06:06:45",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-03-17 T06:06:45"
   },
   {
     "_id": 15,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 37,
-    "ultima_actualizacion": "2026-03-12 T12:55:11",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-03-12 T12:55:11"
   },
   {
     "_id": 16,
     "estado": "disponible",
     "capacidad_actual": 1,
-    "ultima_actualizacion": "2026-05-09 T01:52:48",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-05-09 T01:52:48"
   },
   {
     "_id": 17,
     "estado": "saturado",
     "capacidad_actual": 94,
-    "ultima_actualizacion": "2026-05-31 T09:26:21",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-05-31 T09:26:21"
   },
   {
     "_id": 18,
     "estado": "saturado",
     "capacidad_actual": 56,
-    "ultima_actualizacion": "2026-03-18 T12:55:12",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-03-18 T12:55:12"
   },
   {
     "_id": 19,
     "estado": "disponible",
     "capacidad_actual": 50,
-    "ultima_actualizacion": "2026-05-14 T10:44:59",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-05-14 T10:44:59"
   },
   {
     "_id": 20,
     "estado": "saturado",
     "capacidad_actual": 56,
-    "ultima_actualizacion": "2026-03-14 T07:40:23",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-03-14 T07:40:23"
   },
   {
     "_id": 21,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 24,
-    "ultima_actualizacion": "2026-03-24 T04:14:20",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-03-24 T04:14:20"
   },
   {
     "_id": 22,
     "estado": "disponible",
     "capacidad_actual": 89,
-    "ultima_actualizacion": "2026-05-15 T07:05:25",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-05-15 T07:05:25"
   },
   {
     "_id": 23,
     "estado": "saturado",
     "capacidad_actual": 36,
-    "ultima_actualizacion": "2026-02-07 T04:54:02",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-02-07 T04:54:02"
   },
   {
     "_id": 24,
     "estado": "disponible",
     "capacidad_actual": 58,
-    "ultima_actualizacion": "2026-01-25 T12:16:13",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-01-25 T12:16:13"
   },
   {
     "_id": 25,
     "estado": "saturado",
     "capacidad_actual": 42,
-    "ultima_actualizacion": "2026-01-05 T02:49:13",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-01-05 T02:49:13"
   },
   {
     "_id": 26,
     "estado": "disponible",
     "capacidad_actual": 5,
-    "ultima_actualizacion": "2026-01-03 T06:44:54",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-01-03 T06:44:54"
   },
   {
     "_id": 27,
     "estado": "saturado",
     "capacidad_actual": 67,
-    "ultima_actualizacion": "2026-03-07 T07:12:45",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-03-07 T07:12:45"
   },
   {
     "_id": 28,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 17,
-    "ultima_actualizacion": "2026-01-03 T08:56:54",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-01-03 T08:56:54"
   },
   {
     "_id": 29,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 34,
-    "ultima_actualizacion": "2026-02-28 T10:59:08",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-02-28 T10:59:08"
   },
   {
     "_id": 30,
     "estado": "disponible",
     "capacidad_actual": 51,
-    "ultima_actualizacion": "2026-05-09 T04:18:57",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-05-09 T04:18:57"
   },
   {
     "_id": 31,
     "estado": "disponible",
     "capacidad_actual": 68,
-    "ultima_actualizacion": "2026-04-21 T09:32:29",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-04-21 T09:32:29"
   },
   {
     "_id": 32,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 69,
-    "ultima_actualizacion": "2026-04-07 T10:04:24",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-04-07 T10:04:24"
   },
   {
     "_id": 33,
     "estado": "disponible",
     "capacidad_actual": 27,
-    "ultima_actualizacion": "2026-02-24 T11:06:56",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-02-24 T11:06:56"
   },
   {
     "_id": 34,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 65,
-    "ultima_actualizacion": "2026-03-06 T07:34:51",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-03-06 T07:34:51"
   },
   {
     "_id": 35,
     "estado": "disponible",
     "capacidad_actual": 94,
-    "ultima_actualizacion": "2026-04-05 T11:37:36",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-04-05 T11:37:36"
   },
   {
     "_id": 36,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 38,
-    "ultima_actualizacion": "2026-01-21 T04:09:08",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-01-21 T04:09:08"
   },
   {
     "_id": 37,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 33,
-    "ultima_actualizacion": "2026-05-24 T08:55:51",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-05-24 T08:55:51"
   },
   {
     "_id": 38,
     "estado": "disponible",
     "capacidad_actual": 100,
-    "ultima_actualizacion": "2026-05-28 T03:47:32",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-05-28 T03:47:32"
   },
   {
     "_id": 39,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 41,
-    "ultima_actualizacion": "2026-03-06 T05:30:00",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-03-06 T05:30:00"
   },
   {
     "_id": 40,
     "estado": "saturado",
     "capacidad_actual": 69,
-    "ultima_actualizacion": "2026-04-21 T02:09:49",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-04-21 T02:09:49"
   },
   {
     "_id": 41,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 70,
-    "ultima_actualizacion": "2026-03-15 T08:41:33",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-03-15 T08:41:33"
   },
   {
     "_id": 42,
     "estado": "disponible",
     "capacidad_actual": 22,
-    "ultima_actualizacion": "2026-03-21 T08:52:20",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-03-21 T08:52:20"
   },
   {
     "_id": 43,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 100,
-    "ultima_actualizacion": "2026-05-08 T08:43:24",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-05-08 T08:43:24"
   },
   {
     "_id": 44,
     "estado": "proximo_a_saturarse",
     "capacidad_actual": 69,
-    "ultima_actualizacion": "2026-05-12 T07:56:43",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-05-12 T07:56:43"
   },
   {
     "_id": 45,
     "estado": "saturado",
     "capacidad_actual": 39,
-    "ultima_actualizacion": "2026-04-05 T10:47:13",
-    "materiales_disponibles": []
+    "ultima_actualizacion": "2026-04-05 T10:47:13"
   }
   ],
 

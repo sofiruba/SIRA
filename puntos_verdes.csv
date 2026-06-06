@@ -1,0 +1,46 @@
+id,nombre,direccion,barrio,comuna
+1,Estacion Lugano,Murguiondo 4121,Villa Lugano,Comuna 8
+2,Estacion Flores,Av Rivadavia 7200,Flores,Comuna 7
+3,Estacion Palermo,Av Santa Fe 5100,Palermo,Comuna 14
+4,Estacion Caballito,Av La Plata 600,Caballito,Comuna 6
+5,Estacion Belgrano,Juramento 2500,Belgrano,Comuna 13
+6,Estacion Almagro,Av Corrientes 4100,Almagro,Comuna 5
+7,Estacion Recoleta,Av Pueyrredon 1800,Recoleta,Comuna 2
+8,Estacion Barracas,Montes de Oca 1200,Barracas,Comuna 4
+9,Estacion Mataderos,Av Juan B Alberdi 6500,Mataderos,Comuna 9
+10,Estacion Nunez,Av Cabildo 4200,Nunez,Comuna 13
+11,Punto Verde Parque Chacabuco,Av Asamblea 1300,Parque Chacabuco,Comuna 7
+12,Centro de Reciclaje Saavedra,Av Balbin 4200,Saavedra,Comuna 12
+13,EcoPunto Villa Urquiza,Triunvirato 5000,Villa Urquiza,Comuna 12
+14,Punto Verde Costanera Norte,Av Costanera Rafael Obligado 2100,Palermo,Comuna 14
+15,Centro Ambiental Constitucion,Lima 1500,Constitucion,Comuna 1
+16,Punto Verde Plaza Irlanda,Av Gaona 2400,Caballito,Comuna 6
+17,Centro de Recuperacion de Materiales Boedo,Av Boedo 900,Boedo,Comuna 5
+18,EcoCentro Villa Devoto,Av Beiro 4600,Villa Devoto,Comuna 11
+19,Punto Verde Parque Avellaneda,Av Directorio 4000,Parque Avellaneda,Comuna 9
+20,Centro de Reciclaje San Cristobal,Av San Juan 2500,San Cristobal,Comuna 3
+21,Punto Verde Parque Centenario,Av Angel Gallardo 900,Caballito,Comuna 6
+22,EcoPunto Retiro,Av del Libertador 100,Retiro,Comuna 1
+23,Centro Verde Colegiales,Av Alvarez Thomas 1200,Colegiales,Comuna 13
+24,Centro de Reciclaje Villa Crespo,Av Corrientes 5400,Villa Crespo,Comuna 15
+25,Estacion Ambiental Floresta,Av Rivadavia 8500,Floresta,Comuna 10
+26,Punto Verde Puerto Madero,Juana Manso 1100,Puerto Madero,Comuna 1
+27,Centro de Economia Circular Chacarita,Av Guzman 800,Chacarita,Comuna 15
+28,EcoCentro Monte Castro,Av Alvarez Jonte 4700,Monte Castro,Comuna 10
+29,Punto Verde Parque Patricios,Av Caseros 3000,Parque Patricios,Comuna 4
+30,Centro Integral de Reciclaje Villa Pueyrredon,Nazca 2500,Villa Pueyrredon,Comuna 12
+31,Punto Verde Versalles,Arregui 6400,Versalles,Comuna 10
+32,EcoCentro Villa Real,Av Lope de Vega 2200,Villa Real,Comuna 10
+33,Centro de Reciclaje Villa del Parque,Cuenca 2800,Villa del Parque,Comuna 11
+34,Punto Verde Parque Lezama,Martin Garcia 300,San Telmo,Comuna 1
+35,Centro Ambiental Agronomia,Av San Martin 4400,Agronomia,Comuna 15
+36,EcoPunto Villa Ortuzar,Av de los Incas 3800,Villa Ortuzar,Comuna 15
+37,Centro de Recuperacion Urbana Once,Pueyrredon 500,Balvanera,Comuna 3
+38,Punto Verde Barrancas de Belgrano,Juramento 1600,Belgrano,Comuna 13
+39,EcoCentro Nueva Pompeya,Saenz 1200,Nueva Pompeya,Comuna 4
+40,Centro Integral de Economia Circular Liniers,Av Rivadavia 11400,Liniers,Comuna 9
+41,Punto Verde Coghlan,Av Monroe 3400,Coghlan,Comuna 12
+42,EcoCentro Parque Chas,Av de los Constituyentes 1800,Parque Chas,Comuna 15
+43,Centro de Reciclaje Villa Santa Rita,Nazca 1700,Villa Santa Rita,Comuna 11
+44,Estacion Ambiental Villa General Mitre,Av Juan B Justo 5200,Villa General Mitre,Comuna 11
+45,Centro Integral de Reciclaje Parque Rivadavia,Av Rivadavia 4900,Caballito,Comuna 6

@@ -26,7 +26,7 @@ def cargar_datos(ruta_json="redis_data.json"):
     # Carga de puntos verdes en hashes y sets para estados
     for punto in datos["puntos_verdes"]:
 
-        punto_id = punto["id"]
+        punto_id = punto["_id"]
 
         r.hset(
             f"puntoverde:{punto_id}:estado",

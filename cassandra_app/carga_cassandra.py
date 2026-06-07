@@ -14,9 +14,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # =====================================
 # RUTAS CSV
 # =====================================
-RUTA_RECOLECCIONES = os.path.join(BASE_DIR, "cassandra", "recolecciones.csv")
-RUTA_RETIROS = os.path.join(BASE_DIR, "cassandra", "retiros.csv")
-RUTA_PUNTOS = os.path.join(BASE_DIR, "neo4j", "puntos_verdes.csv")
+RUTA_RECOLECCIONES = os.path.join(BASE_DIR, "cassandra_app", "recolecciones.csv")
+RUTA_RETIROS = os.path.join(BASE_DIR, "cassandra_app", "retiros.csv")
+RUTA_PUNTOS = os.path.join(BASE_DIR, "cassandra_app", "puntos_verdes.csv")
 
 
 # =====================================

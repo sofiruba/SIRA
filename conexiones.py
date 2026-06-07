@@ -8,7 +8,7 @@ MONGO_DB = "sira"
 NEO4J_URI = "bolt://127.0.0.1:7687"
 NEO4J_USER = "neo4j"
 NEO4J_PASSWORD = "Homero1234"
-NEO4J_DATABASE = "neo4j"
+NEO4J_DATABASE = "sira" # o neo4j default si lo creas en una instancia solo
 
 CASSANDRA_HOST = "127.0.0.1"
 CASSANDRA_PORT = 9042

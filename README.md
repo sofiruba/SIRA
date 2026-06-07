@@ -290,6 +290,18 @@ Entrar a Cassandra:
 docker exec -it cassandra-sira cqlsh
 ```
 
+```bash
+CREATE KEYSPACE sira
+WITH replication = {
+'class':'SimpleStrategy',
+'replication_factor':1
+};
+```
+
+
+```bash
+USE sira;
+```
 ---
 
 # Ejecutar la interfaz visual

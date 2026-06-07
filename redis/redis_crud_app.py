@@ -1,8 +1,6 @@
 from datetime import datetime
-from conexiones import obtener_cliente_redis
+import carga_redis as redis_mod
 
-# Declaramos la conexion global
-r = obtener_cliente_redis()
 
 def actualizar_estado_punto(id_punto, estado, capacidad_actual):
     id_punto = str(id_punto)
@@ -11,7 +9,7 @@ def actualizar_estado_punto(id_punto, estado, capacidad_actual):
 
     clave = f"puntoverde:{id_punto}:estado"
 
-    r.hset(
+    redis_mod.r.hset(
         clave,
         mapping={
             "estado": estado,
@@ -20,14 +18,14 @@ def actualizar_estado_punto(id_punto, estado, capacidad_actual):
         }
     )
 
-    r.srem("puntosverdes:disponibles", id_punto)
-    r.srem("puntosverdes:saturados", id_punto)
+    redis_mod.r.srem("puntosverdes:disponibles", id_punto)
+    redis_mod.r.srem("puntosverdes:saturados", id_punto)
 
     if estado == "disponible":
-        r.sadd("puntosverdes:disponibles", id_punto)
+        redis_mod.r.sadd("puntosverdes:disponibles", id_punto)
 
     elif estado == "saturado":
-        r.sadd("puntosverdes:saturados", id_punto)
+        redis_mod.r.sadd("puntosverdes:saturados", id_punto)
 
     return f"Estado del punto verde {id_punto} actualizado correctamente."
 
@@ -35,14 +33,14 @@ def actualizar_estado_punto(id_punto, estado, capacidad_actual):
 def eliminar_estado_punto(id_punto):
     id_punto = str(id_punto)
 
-    r.delete(f"puntoverde:{id_punto}:estado")
-    r.srem("puntosverdes:disponibles", id_punto)
-    r.srem("puntosverdes:saturados", id_punto)
-    r.zrem("ranking:puntosverdes:uso", id_punto)
+    redis_mod.r.delete(f"puntoverde:{id_punto}:estado")
+    redis_mod.r.srem("puntosverdes:disponibles", id_punto)
+    redis_mod.r.srem("puntosverdes:saturados", id_punto)
+    redis_mod.r.zrem("ranking:puntosverdes:uso", id_punto)
 
     return f"Datos temporales del punto verde {id_punto} eliminados de Redis."
 
 
 def eliminar_alertas():
-    r.delete("alertas:recientes")
+    redis_mod.r.delete("alertas:recientes")
     return "Alertas recientes eliminadas correctamente."

@@ -1,18 +1,21 @@
 import redis
 import json
-from conexiones import obtener_cliente_redis
 
 # ==========================================
 # CONEXIÓN A REDIS, docker run --name redis -p 6379:6379 -d redis
 # ==========================================
+
+r = redis.Redis(
+    host="localhost",
+    port=6379,
+    decode_responses=True
+)
 
 # ==========================================
 # CARGA DE DATOS
 # ==========================================
 
 def cargar_datos(ruta_json="redis_data.json"):
-
-    r = obtener_cliente_redis()
 
     with open(ruta_json, "r", encoding="utf-8") as archivo:
         datos = json.load(archivo)

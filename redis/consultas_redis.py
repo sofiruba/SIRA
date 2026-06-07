@@ -1,5 +1,4 @@
 import json
-from conexiones import obtener_cliente_redis
 
 # ==========================================
 # CONSULTAS

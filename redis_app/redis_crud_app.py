@@ -1,5 +1,5 @@
 from datetime import datetime
-import carga_redis as redis_mod
+from redis_app import carga_redis as redis_mod
 
 
 def actualizar_estado_punto(id_punto, estado, capacidad_actual):

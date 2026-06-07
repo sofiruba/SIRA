@@ -5,7 +5,7 @@
 import json
 import os
 from pymongo import MongoClient
-import SIRA_mongodb_funciones as mongo
+import mongodb_app.consultas_mongo as mongo
 
 
 def inicializar_datos():

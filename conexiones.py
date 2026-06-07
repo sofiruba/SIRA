@@ -8,7 +8,7 @@ MONGO_DB = "sira"
 NEO4J_URI = "bolt://127.0.0.1:7687"
 NEO4J_USER = "neo4j"
 NEO4J_PASSWORD = "Homero1234"
-NEO4J_DATABASE = "sira"
+NEO4J_DATABASE = "neo4j"
 
 CASSANDRA_HOST = "127.0.0.1"
 CASSANDRA_PORT = 9042
@@ -34,3 +34,4 @@ def obtener_cassandra_session():
     cluster = Cluster([CASSANDRA_HOST], port=CASSANDRA_PORT)
     session = cluster.connect(CASSANDRA_KEYSPACE)
     return session
+

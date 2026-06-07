@@ -14,7 +14,7 @@ driver = GraphDatabase.driver(
 # WITH DRIVER.SESSION()
 # =====================================
 
-with driver.session() as session:
+with driver.session(database="sira") as session:
 
     # ---------------------------------
     # PUNTOS VERDES CERCANOS

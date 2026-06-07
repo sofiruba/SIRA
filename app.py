@@ -1,20 +1,22 @@
-```python
+
 import streamlit as st
 import pandas as pd
 import io
 import contextlib
 
-import mongodb.SIRA_mongodb_funciones as mongo
-import neo4j.consultas_neo as neo_consultas
-import redis.consultas_redis as redis_consultas
-import cassandra.consultas_cassandra as cassandra_consultas
+import redis_app.carga_redis as redis_carga
 
-import mongodb.mongo_crud_app as mongo_crud
-import neo4j.neo_crud_app as neo_crud
-import redis.redis_crud_app as redis_crud
-import cassandra.cassandra_crud_app as cassandra_crud
+import mongodb_app.consultas_mongo as mongo
+import neo4j_app.consultas_neo as neo_consultas
+import redis_app.consultas_redis as redis_consultas
+import cassandra_app.consultas_cassandra as cassandra_consultas
 
-from conexiones import obtener_colecciones_mongo, obtener_driver_neo4j, NEO4J_DATABASE, obtener_cliente_redis, obtener_cassandra_session
+import mongodb_app.mongo_crud_app as mongo_crud
+import neo4j_app.neo_crud_app as neo_crud
+import redis_app.redis_crud_app as redis_crud
+import cassandra_app.cassandra_crud_app as cassandra_crud
+
+from conexiones import obtener_colecciones_mongo, obtener_driver_neo4j, NEO4J_DATABASE, obtener_cassandra_session
 
 
 # ============================================================
@@ -41,9 +43,7 @@ def cargar_mongo():
 def cargar_neo4j():
     return obtener_driver_neo4j()
 
-@st.cache_resource
-def cargar_redis(): 
-    return obtener_cliente_redis()
+
 
 @st.cache_resource
 def cargar_cassandra(): 
@@ -52,7 +52,7 @@ def cargar_cassandra():
 
 coleccion_puntos, coleccion_residuos = cargar_mongo()
 driver_neo4j = cargar_neo4j()
-cliente_redis = cargar_redis()
+
 session_cassandra = cargar_cassandra()
 
 
@@ -826,7 +826,7 @@ elif seccion == "Redis":
         if st.button("Ejecutar consulta Redis", key="redis_btn_ejecutar_consulta"):
             if consulta_redis == "Estado de punto verde por ID":
                 if id_punto_redis_consulta:
-                    estado = redis_consultas.obtener_estado_punto_verde(cliente_redis, id_punto_redis_consulta)
+                    estado = redis_consultas.obtener_estado_punto_verde(id_punto_redis_consulta)
 
                     if estado:
                         st.json(estado)
@@ -836,15 +836,15 @@ elif seccion == "Redis":
                     st.error("Ingresá un ID.")
 
             elif consulta_redis == "Puntos verdes disponibles":
-                disponibles = redis_consultas.obtener_puntos_disponibles(cliente_redis)
+                disponibles = redis_consultas.obtener_puntos_disponibles()
                 mostrar_lista_como_tabla(disponibles, "punto_verde_disponible")
 
             elif consulta_redis == "Puntos verdes saturados":
-                saturados = redis_consultas.obtener_puntos_saturados(cliente_redis)
+                saturados = redis_consultas.obtener_puntos_saturados()
                 mostrar_lista_como_tabla(saturados, "punto_verde_saturado")
 
             elif consulta_redis == "Ranking de puntos verdes por uso":
-                ranking = redis_consultas.obtener_ranking(cliente_redis)
+                ranking = redis_consultas.obtener_ranking()
 
                 datos = [
                     {
@@ -862,7 +862,7 @@ elif seccion == "Redis":
                     st.warning("No hay ranking cargado.")
 
             elif consulta_redis == "Alertas recientes":
-                alertas = redis_consultas.obtener_alertas(cliente_redis)
+                alertas = redis_consultas.obtener_alertas()
 
                 if alertas:
                     st.dataframe(pd.DataFrame(alertas), use_container_width=True)
@@ -898,7 +898,7 @@ elif seccion == "Redis":
         if st.button("Actualizar estado en Redis", key="redis_btn_actualizar_estado"):
             if id_punto_redis_update:
                 mensaje = redis_crud.actualizar_estado_punto(
-                    cliente_redis,
+
                     id_punto_redis_update,
                     estado_nuevo_redis,
                     capacidad_nueva_redis
@@ -928,14 +928,14 @@ elif seccion == "Redis":
 
             if st.button("Eliminar estado del punto verde", key="redis_btn_eliminar_estado"):
                 if id_punto_redis_delete:
-                    mensaje = redis_crud.eliminar_estado_punto(cliente_redis,id_punto_redis_delete)
+                    mensaje = redis_crud.eliminar_estado_punto(id_punto_redis_delete)
                     st.warning(mensaje)
                 else:
                     st.error("Ingresá un ID.")
 
         elif opcion_delete_redis == "Todas las alertas recientes":
             if st.button("Eliminar alertas", key="redis_btn_eliminar_alertas"):
-                mensaje = redis_crud.eliminar_alertas(cliente_redis)
+                mensaje = redis_crud.eliminar_alertas()
                 st.warning(mensaje)
 
     with tab4:
@@ -1191,8 +1191,8 @@ elif seccion == "Análisis general":
     total_residuos = coleccion_residuos.count_documents({})
 
     try:
-        puntos_disponibles = len(redis_consultas.obtener_puntos_disponibles(cliente_redis))
-        puntos_saturados = len(redis_consultas.obtener_puntos_saturados(cliente_redis))
+        puntos_disponibles = len(redis_consultas.obtener_puntos_disponibles())
+        puntos_saturados = len(redis_consultas.obtener_puntos_saturados())
     except Exception:
         puntos_disponibles = 0
         puntos_saturados = 0
@@ -1213,4 +1213,3 @@ elif seccion == "Análisis general":
 
     st.write("Residuos más reciclados:")
     ejecutar_neo_por_nombre(["residuos_mas_reciclados", "consulta9"])
-```

@@ -1,21 +1,18 @@
 import redis
 import json
+from conexiones import obtener_cliente_redis
 
 # ==========================================
 # CONEXIÓN A REDIS, docker run --name redis -p 6379:6379 -d redis
 # ==========================================
-
-r = redis.Redis(
-    host="localhost",
-    port=6379,
-    decode_responses=True
-)
 
 # ==========================================
 # CARGA DE DATOS
 # ==========================================
 
 def cargar_datos(ruta_json="redis_data.json"):
+
+    r = obtener_cliente_redis()
 
     with open(ruta_json, "r", encoding="utf-8") as archivo:
         datos = json.load(archivo)
@@ -62,51 +59,11 @@ def cargar_datos(ruta_json="redis_data.json"):
             json.dumps(alerta, ensure_ascii=False)
         )
 
-# ==========================================
-# CONSULTAS
-# ==========================================
-
-def obtener_estado_punto_verde(id_punto):
-    return r.hgetall(
-        f"puntoverde:{id_punto}:estado"
-    )
-
-def obtener_puntos_disponibles():
-    return list(
-        r.smembers("puntosverdes:disponibles")
-    )
-
-def obtener_puntos_saturados():
-    return list(
-        r.smembers("puntosverdes:saturados")
-    )
-
-def obtener_ranking():
-    return r.zrevrange(
-        "ranking:puntosverdes:uso",
-        0,
-        -1,
-        withscores=True
-    )
-
-def obtener_alertas():
-    alertas = r.lrange(
-        "alertas:recientes",
-        0,
-        -1
-    )
-
-    return [
-        json.loads(alerta)
-        for alerta in alertas
-    ]
-
-# ==========================================
-# EJECUCION A LO CRIOLLO, se ejecuta de forma manual desde la terminal para carga de datos
-# ==========================================
-
 if __name__ == "__main__":
 
     cargar_datos()
 
     print("Datos cargados correctamente en Redis.")
+
+
+

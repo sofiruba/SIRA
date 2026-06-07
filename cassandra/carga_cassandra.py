@@ -1,69 +1,26 @@
-from cassandra.cluster import Cluster
+import os
 import pandas as pd
-
-
-# =====================================
-# CONEXION A CASSANDRA
-# =====================================
-
-def conectar():
-    cluster = Cluster(['localhost'])
-    session = cluster.connect('sira')
-    return cluster, session
-
+from conexiones import obtener_cassandra_session
 
 # =====================================
-# MAP PUNTO VERDE PARA BARRIO
+# RUTA BASE DEL PROYECTO (SIRA)
 # =====================================
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-PUNTOS_VERDES = {
-    "PV1": "Villa Lugano",
-    "PV2": "Flores",
-    "PV3": "Palermo",
-    "PV4": "Caballito",
-    "PV5": "Belgrano",
-    "PV6": "Almagro",
-    "PV7": "Recoleta",
-    "PV8": "Barracas",
-    "PV9": "Mataderos",
-    "PV10": "Nuñez",
-    "PV11": "Parque Chacabuco",
-    "PV12": "Saavedra",
-    "PV13": "Villa Urquiza",
-    "PV14": "Palermo",
-    "PV15": "Constitucion",
-    "PV16": "Caballito",
-    "PV17": "Boedo",
-    "PV18": "Villa Devoto",
-    "PV19": "Parque Avellaneda",
-    "PV20": "San Cristobal",
-    "PV21": "Caballito",
-    "PV22": "Retiro",
-    "PV23": "Colegiales",
-    "PV24": "Villa Crespo",
-    "PV25": "Floresta",
-    "PV26": "Puerto Madero",
-    "PV27": "Chacarita",
-    "PV28": "Monte Castro",
-    "PV29": "Parque Patricios",
-    "PV30": "Villa Pueyrredon",
-    "PV31": "Versalles",
-    "PV32": "Villa Real",
-    "PV33": "Villa del Parque",
-    "PV34": "San Telmo",
-    "PV35": "Agronomia",
-    "PV36": "Villa Ortuzar",
-    "PV37": "Balvanera",
-    "PV38": "Belgrano",
-    "PV39": "Nueva Pompeya",
-    "PV40": "Liniers",
-    "PV41": "Coghlan",
-    "PV42": "Parque Chas",
-    "PV43": "Villa Santa Rita",
-    "PV44": "Villa General Mitre",
-    "PV45": "Caballito"
-}
+# =====================================
+# RUTAS CSV
+# =====================================
+RUTA_RECOLECCIONES = os.path.join(BASE_DIR, "cassandra", "recolecciones.csv")
+RUTA_RETIROS = os.path.join(BASE_DIR, "cassandra", "retiros.csv")
+RUTA_PUNTOS = os.path.join(BASE_DIR, "neo4j", "puntos_verdes.csv")
 
+def cargar_mapa_puntos():
+    try:
+        df_puntos = pd.read_csv(RUTA_PUNTOS)
+        return dict(zip(df_puntos["id"], df_puntos["barrio"]))
+    except FileNotFoundError:
+        print("No se encontró puntos_verdes.csv en carpeta neo4j")
+        return {}
 
 # =====================================
 # TABLA 1
@@ -157,7 +114,7 @@ def cargar_residuos_por_mes(session, df):
 
         fecha = pd.to_datetime(row["fecha_recoleccion"])
         anio_mes = fecha.strftime("%Y-%m")
-
+        
         session.execute(query, (
             anio_mes,
             fecha,
@@ -196,8 +153,7 @@ def cargar_retiros_por_reciclador(session, df):
 # TABLA 6
 # =====================================
 
-def cargar_actividad_por_zona(session, df):
-
+def cargar_actividad_por_zona(session, df, mapa_puntos):
     query = session.prepare("""
     INSERT INTO actividad_por_zona
     (zona, fecha_recoleccion, recoleccion_id,
@@ -206,12 +162,9 @@ def cargar_actividad_por_zona(session, df):
     """)
 
     for _, row in df.iterrows():
-
-        zona = PUNTOS_VERDES.get(
-            row["punto_verde_id"],
-            "Desconocida"
-        )
-
+        # Acá usa el diccionario dinámico que le pasamos desde el main
+        zona = mapa_puntos.get(row["punto_verde_id"], "Desconocida")
+        
         session.execute(query, (
             zona,
             pd.to_datetime(row["fecha_recoleccion"]),
@@ -226,23 +179,35 @@ def cargar_actividad_por_zona(session, df):
 # =====================================
 
 def main():
+    print("Iniciando carga en Cassandra...")
 
-    cluster, session = conectar()
+    session = obtener_cassandra_session()
 
-    recolecciones = pd.read_csv("recolecciones.csv")
-    retiros = pd.read_csv("retiros.csv")
+    # ==============================
+    # MAPA PUNTOS VERDES
+    # ==============================
+    mapa_puntos_verdes = cargar_mapa_puntos()
 
+    # ==============================
+    # CSV CASSANDRA
+    # ==============================
+    recolecciones = pd.read_csv(RUTA_RECOLECCIONES)
+    retiros = pd.read_csv(RUTA_RETIROS)
+
+    # ==============================
+    # CARGAS
+    # ==============================
     cargar_recolecciones_por_usuario(session, recolecciones)
     cargar_recolecciones_por_punto_verde(session, recolecciones)
     cargar_recolecciones_por_id(session, recolecciones)
     cargar_residuos_por_mes(session, recolecciones)
-    cargar_actividad_por_zona(session, recolecciones)
+    cargar_actividad_por_zona(session, recolecciones, mapa_puntos_verdes)
 
     cargar_retiros_por_reciclador(session, retiros)
 
-    print("Datos cargados correctamente en Cassandra.")
+    print("Carga finalizada correctamente en Cassandra")
 
-    cluster.shutdown()
+    session.shutdown()
 
 
 if __name__ == "__main__":

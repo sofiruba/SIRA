@@ -5,14 +5,16 @@ import io
 import contextlib
 
 import mongodb.SIRA_mongodb_funciones as mongo
-import neo4j.consultasNeo as neo
-import redis.carga_redis as redis_mod
+import neo4j.consultas_neo as neo_consultas
+import redis.consultas_redis as redis_consultas
+import cassandra.consultas_cassandra as cassandra_consultas
 
 import mongodb.mongo_crud_app as mongo_crud
 import neo4j.neo_crud_app as neo_crud
 import redis.redis_crud_app as redis_crud
+import cassandra.cassandra_crud_app as cassandra_crud
 
-from conexiones import obtener_colecciones_mongo, obtener_driver_neo4j, NEO4J_DATABASE
+from conexiones import obtener_colecciones_mongo, obtener_driver_neo4j, NEO4J_DATABASE, obtener_cliente_redis, obtener_cassandra_session
 
 
 # ============================================================
@@ -39,9 +41,19 @@ def cargar_mongo():
 def cargar_neo4j():
     return obtener_driver_neo4j()
 
+@st.cache_resource
+def cargar_redis(): 
+    return obtener_cliente_redis()
+
+@st.cache_resource
+def cargar_cassandra(): 
+    return obtener_cassandra_session()
+
 
 coleccion_puntos, coleccion_residuos = cargar_mongo()
 driver_neo4j = cargar_neo4j()
+cliente_redis = cargar_redis()
+session_cassandra = cargar_cassandra()
 
 
 # ============================================================
@@ -83,7 +95,7 @@ def buscar_funcion(modulo, posibles_nombres):
 
 
 def ejecutar_neo_por_nombre(posibles_nombres):
-    funcion = buscar_funcion(neo, posibles_nombres)
+    funcion = buscar_funcion(neo_consultas, posibles_nombres)
 
     if funcion is None:
         st.error("No encontré esa función en consultasNeo.py.")
@@ -136,6 +148,7 @@ seccion = st.sidebar.radio(
         "MongoDB",
         "Neo4j",
         "Redis",
+        "Cassandra",
         "Análisis general"
     ],
     key="sidebar_menu_principal"
@@ -168,6 +181,7 @@ if seccion == "Inicio":
     MongoDB almacena datos descriptivos de puntos verdes y residuos.
     Neo4j representa relaciones entre usuarios, residuos, puntos verdes y recicladores.
     Redis administra estados temporales y en tiempo real.
+    Cassandra guarda registros históricos de recolecciones, usuarios y puntos verdes.
     """)
 
 
@@ -812,7 +826,7 @@ elif seccion == "Redis":
         if st.button("Ejecutar consulta Redis", key="redis_btn_ejecutar_consulta"):
             if consulta_redis == "Estado de punto verde por ID":
                 if id_punto_redis_consulta:
-                    estado = redis_mod.obtener_estado_punto_verde(id_punto_redis_consulta)
+                    estado = redis_consultas.obtener_estado_punto_verde(cliente_redis, id_punto_redis_consulta)
 
                     if estado:
                         st.json(estado)
@@ -822,15 +836,15 @@ elif seccion == "Redis":
                     st.error("Ingresá un ID.")
 
             elif consulta_redis == "Puntos verdes disponibles":
-                disponibles = redis_mod.obtener_puntos_disponibles()
+                disponibles = redis_consultas.obtener_puntos_disponibles(cliente_redis)
                 mostrar_lista_como_tabla(disponibles, "punto_verde_disponible")
 
             elif consulta_redis == "Puntos verdes saturados":
-                saturados = redis_mod.obtener_puntos_saturados()
+                saturados = redis_consultas.obtener_puntos_saturados(cliente_redis)
                 mostrar_lista_como_tabla(saturados, "punto_verde_saturado")
 
             elif consulta_redis == "Ranking de puntos verdes por uso":
-                ranking = redis_mod.obtener_ranking()
+                ranking = redis_consultas.obtener_ranking(cliente_redis)
 
                 datos = [
                     {
@@ -848,7 +862,7 @@ elif seccion == "Redis":
                     st.warning("No hay ranking cargado.")
 
             elif consulta_redis == "Alertas recientes":
-                alertas = redis_mod.obtener_alertas()
+                alertas = redis_consultas.obtener_alertas(cliente_redis)
 
                 if alertas:
                     st.dataframe(pd.DataFrame(alertas), use_container_width=True)
@@ -884,6 +898,7 @@ elif seccion == "Redis":
         if st.button("Actualizar estado en Redis", key="redis_btn_actualizar_estado"):
             if id_punto_redis_update:
                 mensaje = redis_crud.actualizar_estado_punto(
+                    cliente_redis,
                     id_punto_redis_update,
                     estado_nuevo_redis,
                     capacidad_nueva_redis
@@ -913,14 +928,14 @@ elif seccion == "Redis":
 
             if st.button("Eliminar estado del punto verde", key="redis_btn_eliminar_estado"):
                 if id_punto_redis_delete:
-                    mensaje = redis_crud.eliminar_estado_punto(id_punto_redis_delete)
+                    mensaje = redis_crud.eliminar_estado_punto(cliente_redis,id_punto_redis_delete)
                     st.warning(mensaje)
                 else:
                     st.error("Ingresá un ID.")
 
         elif opcion_delete_redis == "Todas las alertas recientes":
             if st.button("Eliminar alertas", key="redis_btn_eliminar_alertas"):
-                mensaje = redis_crud.eliminar_alertas()
+                mensaje = redis_crud.eliminar_alertas(cliente_redis)
                 st.warning(mensaje)
 
     with tab4:
@@ -933,10 +948,236 @@ elif seccion == "Redis":
 
         if st.button("Cargar redis_data.json", key="redis_btn_cargar_datos"):
             try:
-                redis_mod.cargar_datos()
+                redis_carga.cargar_datos()
                 st.success("Datos cargados correctamente en Redis.")
             except Exception as e:
                 st.error(f"Error al cargar datos en Redis: {e}")
+
+# ============================================================
+# CASSANDRA
+# ============================================================
+
+elif seccion == "Cassandra":
+    st.title("📦 Cassandra - Registros de recolecciones y analítica")
+
+    st.write("""
+    Cassandra almacena grandes volúmenes de recolecciones y retiros históricos.
+    Se utiliza para consultas rápidas por usuario, punto verde, reciclador y zona.
+    """)
+
+    tab1, tab2, tab3 = st.tabs([
+        "Consultas",
+        "CRUD",
+        "Análisis"
+    ])
+
+    # ====================================================
+    # CONSULTAS
+    # ====================================================
+
+    with tab1:
+
+        consulta = st.selectbox(
+            "Seleccioná una consulta",
+            [
+                "Recolecciones por usuario",
+                "Recolecciones por punto verde",
+                "Retiros por reciclador",
+                "Actividad por zona"
+            ]
+        )
+
+        if consulta == "Recolecciones por usuario":
+            usuario_id = st.text_input("ID Usuario")
+
+        elif consulta == "Recolecciones por punto verde":
+            punto_verde_id = st.text_input("ID Punto Verde")
+
+        elif consulta == "Retiros por reciclador":
+            reciclador_id = st.text_input("ID Reciclador")
+
+        elif consulta == "Actividad por zona":
+            zona = st.text_input("Zona")
+
+        if st.button("Ejecutar consulta Cassandra"):
+
+            try:
+
+                if consulta == "Recolecciones por usuario":
+
+                    datos = cassandra_consultas.consultar_usuario(
+                        session_cassandra,
+                        usuario_id
+                    )
+
+                elif consulta == "Recolecciones por punto verde":
+
+                    datos = cassandra_consultas.consultar_punto_verde(
+                        session_cassandra,
+                        punto_verde_id
+                    )
+
+                elif consulta == "Retiros por reciclador":
+
+                    datos = cassandra_consultas.consultar_reciclador(
+                        session_cassandra,
+                        reciclador_id
+                    )
+
+                else:
+
+                    datos = cassandra_consultas.consultar_zona(
+                        session_cassandra,
+                        zona
+                    )
+
+                if datos:
+                    st.dataframe(pd.DataFrame(datos))
+                else:
+                    st.warning("No se encontraron registros.")
+
+            except Exception as e:
+                st.error(e)
+
+    # ====================================================
+    # CRUD
+    # ====================================================
+
+    with tab2:
+
+        crud = st.selectbox(
+            "Operación",
+            [
+                "Crear",
+                "Buscar por ID",
+                "Actualizar peso",
+                "Actualizar tipo",
+                "Eliminar"
+            ]
+        )
+
+        if crud == "Crear":
+
+            recoleccion_id = st.text_input("ID Recolección")
+            usuario_id = st.text_input("Usuario")
+            punto_verde_id = st.text_input("Punto Verde")
+            fecha = st.text_input("Fecha (YYYY-MM-DD)")
+            tipo = st.text_input("Tipo Residuo")
+            peso = st.number_input("Peso KG")
+
+            if st.button("Crear recolección"):
+
+                mensaje = cassandra_crud.crear_recoleccion(
+                    recoleccion_id,
+                    usuario_id,
+                    punto_verde_id,
+                    fecha,
+                    tipo,
+                    peso
+                )
+
+                st.success(mensaje)
+
+        elif crud == "Buscar por ID":
+
+            recoleccion_id = st.text_input("ID")
+
+            if st.button("Buscar"):
+
+                dato = cassandra_crud.obtener_recoleccion_por_id(
+                    recoleccion_id
+                )
+
+                if dato:
+                    st.json(dict(dato._asdict()))
+                else:
+                    st.warning("No encontrado.")
+
+        elif crud == "Actualizar peso":
+
+            recoleccion_id = st.text_input("ID Recolección")
+            peso = st.number_input("Nuevo peso")
+
+            if st.button("Actualizar peso"):
+
+                mensaje = cassandra_crud.actualizar_peso_recoleccion(
+                    recoleccion_id,
+                    peso
+                )
+
+                st.success(mensaje)
+
+        elif crud == "Actualizar tipo":
+
+            recoleccion_id = st.text_input("ID Recolección")
+            tipo = st.text_input("Nuevo tipo")
+
+            if st.button("Actualizar tipo"):
+
+                mensaje = cassandra_crud.actualizar_tipo_residuo(
+                    recoleccion_id,
+                    tipo
+                )
+
+                st.success(mensaje)
+
+        elif crud == "Eliminar":
+
+            recoleccion_id = st.text_input("ID Recolección")
+
+            if st.button("Eliminar"):
+
+                mensaje = cassandra_crud.eliminar_recoleccion(
+                    recoleccion_id
+                )
+
+                st.warning(mensaje)
+
+    # ====================================================
+    # ANÁLISIS
+    # ====================================================
+
+    with tab3:
+
+        usuario_id = st.text_input(
+            "Usuario para análisis",
+            value="1"
+        )
+
+        if st.button("Generar análisis"):
+
+            try:
+
+                total = cassandra_consultas.total_kg_usuario(
+                    session_cassandra,
+                    usuario_id
+                )
+
+                resumen = cassandra_consultas.recolecciones_por_tipo(
+                    session_cassandra,
+                    usuario_id
+                )
+
+                st.metric(
+                    "Total reciclado (kg)",
+                    round(total, 2)
+                )
+
+                if resumen:
+
+                    df = pd.DataFrame(
+                        resumen.items(),
+                        columns=["Tipo", "Kg"]
+                    )
+
+                    st.dataframe(df)
+
+                    st.bar_chart(
+                        df.set_index("Tipo")
+                    )
+
+            except Exception as e:
+                st.error(e)
 
 
 # ============================================================
@@ -950,8 +1191,8 @@ elif seccion == "Análisis general":
     total_residuos = coleccion_residuos.count_documents({})
 
     try:
-        puntos_disponibles = len(redis_mod.obtener_puntos_disponibles())
-        puntos_saturados = len(redis_mod.obtener_puntos_saturados())
+        puntos_disponibles = len(redis_consultas.obtener_puntos_disponibles(cliente_redis))
+        puntos_saturados = len(redis_consultas.obtener_puntos_saturados(cliente_redis))
     except Exception:
         puntos_disponibles = 0
         puntos_saturados = 0

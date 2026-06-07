@@ -162,6 +162,7 @@ python SIRA_mongodb.py
 
 También puede utilizarse el archivo interactivo de MongoDB si se quiere probar operaciones desde consola:
 
+cd mongodb
 ```bash
 python SIRA_mongodb_interactivo.py
 ```

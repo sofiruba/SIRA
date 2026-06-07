@@ -4,13 +4,13 @@ import pandas as pd
 import io
 import contextlib
 
-import SIRA_mongodb_funciones as mongo
-import consultasNeo as neo
-import carga_Redis as redis_mod
+import mongodb.SIRA_mongodb_funciones as mongo
+import neo4j.consultasNeo as neo
+import redis.carga_redis as redis_mod
 
-import mongo_crud_app as mongo_crud
-import neo4j_crud_app as neo_crud
-import redis_crud_app as redis_crud
+import mongodb.mongo_crud_app as mongo_crud
+import neo4j.neo_crud_app as neo_crud
+import redis.redis_crud_app as redis_crud
 
 from conexiones import obtener_colecciones_mongo, obtener_driver_neo4j, NEO4J_DATABASE
 

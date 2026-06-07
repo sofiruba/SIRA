@@ -1,0 +1,31 @@
+id,nombre,tipo,direccion,barrio,comuna
+RCL1,Recolectores Urbanos SA,Empresa,Av San Martin 1200,Almagro,Comuna 5
+RCL2,Cooperativa Verde Futuro,Cooperativa,Av Rivadavia 7200,Flores,Comuna 7
+RCL3,EcoTrans Logistica,Empresa,Av Santa Fe 5100,Palermo,Comuna 14
+RCL4,Reciclaje Norte,Empresa,Av Cabildo 4200,Nunez,Comuna 13
+RCL5,Manos Verdes,Cooperativa,Av La Plata 600,Caballito,Comuna 6
+RCL6,Recolectores Independientes BA,Independiente,Av Corrientes 4100,Almagro,Comuna 5
+RCL7,EcoMovil SRL,Empresa,Juramento 2500,Belgrano,Comuna 13
+RCL8,Verde Circular,Cooperativa,Av Rivadavia 8500,Floresta,Comuna 10
+RCL9,Logistica Eco BA,Empresa,Montes de Oca 1200,Barracas,Comuna 4
+RCL10,Red Verde Urbana,Cooperativa,Av San Juan 2500,San Cristobal,Comuna 3
+RCL11,TransEco Soluciones,Empresa,Av Alvarez Thomas 1200,Colegiales,Comuna 13
+RCL12,Circuito Reciclaje Sur,Empresa,Lima 1500,Constitucion,Comuna 1
+RCL13,Coop Ambiental Oeste,Cooperativa,Nazca 2500,Villa Pueyrredon,Comuna 12
+RCL14,EcoRecolectores Unidos,Independiente,Av Gaona 2400,Caballito,Comuna 6
+RCL15,Green Logistics BA,Empresa,Av del Libertador 100,Retiro,Comuna 1
+RCL16,Red Circular Argentina,Cooperativa,Av Caseros 3000,Parque Patricios,Comuna 4
+RCL17,Reciclaje Verde Sur,Cooperativa,Av Boedo 900,Boedo,Comuna 5
+RCL18,EcoRecolecta BA,Empresa,Av Beiro 4600,Villa Devoto,Comuna 11
+RCL19,Circulo Circular,Cooperativa,Av Directorio 4000,Parque Avellaneda,Comuna 9
+RCL20,Urban Eco Logistics,Empresa,Av Guzman 800,Chacarita,Comuna 15
+RCL21,Recolectores GBA Norte,Empresa,Av Alvarez Jonte 4700,Monte Castro,Comuna 10
+RCL22,Verde Movil SA,Empresa,Av Rivadavia 11400,Liniers,Comuna 9
+RCL23,Coop Reciclaje Central,Cooperativa,Av Monroe 3400,Coghlan,Comuna 12
+RCL24,Eco Ruta Argentina,Empresa,Av de los Incas 3800,Villa Ortuzar,Comuna 15
+RCL25,Red de Recicladores BA,Cooperativa,Av San Martin 4400,Agronomia,Comuna 15
+RCL26,Logistica Sustentable,Empresa,Av Corrientes 5400,Villa Crespo,Comuna 15
+RCL27,Manos Circulares,Independiente,Arregui 6400,Versalles,Comuna 10
+RCL28,Eco Transporte Urbano,Empresa,Av Cabildo 4200,Nunez,Comuna 13
+RCL29,Green Collect BA,Cooperativa,Av Rivadavia 4900,Caballito,Comuna 6
+RCL30,Recupera Circular,Empresa,Nazca 1700,Villa Santa Rita,Comuna 11

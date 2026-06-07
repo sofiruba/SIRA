@@ -191,13 +191,13 @@ MATCH (n) RETURN n LIMIT 10;
 Para ejecutar consultas de Neo4j desde consola:
 
 ```bash
-python consultasNeo.py
+python neo4j/consultas_neo.py
 ```
 
 Para ejecutar el CRUD de Neo4j por consola:
 
 ```bash
-python backneocrud.py
+python neo4j/backneocrud.py
 ```
 
 ---

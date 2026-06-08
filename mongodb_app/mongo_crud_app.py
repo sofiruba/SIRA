@@ -129,3 +129,50 @@ def eliminar_residuo(id_residuo):
         return f"Residuo {id_residuo} eliminado correctamente."
 
     return "No se encontró un residuo con ese ID."
+
+def buscar_punto_verde_por_barrio(coleccion_puntos, barrio):
+    return list(coleccion_puntos.find(
+        {"barrio": barrio},
+        {"_id": 0}
+    ))
+
+
+def buscar_residuo_por_nombre(coleccion_residuos, nombre):
+    return list(coleccion_residuos.find(
+        {"nombre": {"$regex": nombre, "$options": "i"}},
+        {"_id": 0}
+    ))
+
+
+def crear_muchos_puntos_verdes(coleccion_puntos, lista):
+    coleccion_puntos.insert_many(lista)
+    return f"{len(lista)} puntos verdes creados correctamente."
+
+
+def crear_muchos_residuos(coleccion_residuos, lista):
+    coleccion_residuos.insert_many(lista)
+    return f"{len(lista)} residuos creados correctamente."
+
+
+def eliminar_muchos_puntos_verdes(coleccion_puntos, ids):
+    resultado = coleccion_puntos.delete_many({"id": {"$in": ids}})
+    return f"Se eliminaron {resultado.deleted_count} puntos verdes."
+
+
+def eliminar_muchos_residuos(coleccion_residuos, coleccion_puntos, codigos):
+    resultado = coleccion_residuos.delete_many({"id_residuo": {"$in": codigos}})
+    coleccion_puntos.update_many(
+        {},
+        {"$pull": {"residuos_aceptados": {"$in": codigos}}}
+    )
+    return f"Se eliminaron {resultado.deleted_count} residuos."
+
+
+def agregar_campo_activo(coleccion_puntos):
+    resultado = coleccion_puntos.update_many({}, {"$set": {"activo": True}})
+    return f"Campo activo agregado a {resultado.modified_count} documentos."
+
+
+def eliminar_campo_activo(coleccion_puntos):
+    resultado = coleccion_puntos.update_many({}, {"$unset": {"activo": ""}})
+    return f"Campo activo eliminado de {resultado.modified_count} documentos."

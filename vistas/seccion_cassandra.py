@@ -42,7 +42,7 @@ def render(session):
         elif consulta == "Actividad por zona":
             zona = st.text_input("Zona (barrio)", key="cass_consulta_zona")
         elif consulta == "Buscar recolección por ID":
-            recoleccion_id = st.number_input("ID Recolección", min_value=1, step=1, key="cass_consulta_id")
+            recoleccion_id = st.text_input("ID Recolección", key="cass_consulta_id")
         elif consulta == "Últimas recolecciones de usuario":
             usuario_id = st.text_input("ID Usuario", key="cass_consulta_ultimas_u")
             limite = st.number_input("Cantidad", min_value=1, max_value=50, value=5, step=1, key="cass_consulta_limite")
@@ -60,9 +60,11 @@ def render(session):
                 elif consulta == "Retiros por reciclador":
                     datos = cassandra_consultas.consultar_reciclador(session, reciclador_id)
                 elif consulta == "Actividad por zona":
+                    # zona es TEXT → se pasa directo como string
                     datos = cassandra_consultas.consultar_zona(session, zona)
                 elif consulta == "Buscar recolección por ID":
-                    row = cassandra_crud.obtener_recoleccion_por_id(int(recoleccion_id))
+                    # CORRECCIÓN: recoleccion_id es TEXT, se pasa como str
+                    row = cassandra_crud.obtener_recoleccion_por_id(str(recoleccion_id), session=session)
                     if row:
                         st.dataframe(pd.DataFrame([dict(row._asdict())]))
                     else:
@@ -107,19 +109,19 @@ def render(session):
     with tab2:
         st.subheader("Crear recolección")
 
-        recoleccion_id = st.number_input("ID Recolección", min_value=1, step=1, key="cass_crear_id")
-        usuario_id     = st.number_input("ID Usuario",     min_value=1, step=1, key="cass_crear_usuario")
-        punto_verde_id = st.number_input("ID Punto Verde", min_value=1, step=1, key="cass_crear_pv")
+        recoleccion_id = st.text_input("ID Recolección", key="cass_crear_id")
+        usuario_id     = st.text_input("ID Usuario",     key="cass_crear_usuario")
+        punto_verde_id = st.text_input("ID Punto Verde", key="cass_crear_pv")
         fecha          = st.text_input("Fecha (YYYY-MM-DD)", key="cass_crear_fecha")
         tipo           = st.text_input("Tipo de Residuo",    key="cass_crear_tipo")
         peso           = st.number_input("Peso (kg)", min_value=0.0, step=0.1, key="cass_crear_peso")
 
         if st.button("Crear recolección", key="cass_btn_crear"):
-            if all([fecha, tipo]):
+            if all([recoleccion_id, usuario_id, punto_verde_id, fecha, tipo]):
                 try:
                     st.success(cassandra_crud.crear_recoleccion(
-                        int(recoleccion_id), int(usuario_id), int(punto_verde_id),
-                        fecha, tipo, peso
+                        str(recoleccion_id), str(usuario_id), str(punto_verde_id),
+                        fecha, tipo, peso, session=session
                     ))
                 except Exception as e:
                     st.error(f"Error: {e}")
@@ -138,26 +140,33 @@ def render(session):
             key="cass_select_update"
         )
 
-        recoleccion_id = st.number_input("ID Recolección", min_value=1, step=1, key="cass_update_id")
+        recoleccion_id = st.text_input("ID Recolección", key="cass_update_id")
 
         if tipo_update == "Peso":
             nuevo_peso = st.number_input("Nuevo peso (kg)", min_value=0.0, step=0.1, key="cass_update_peso")
             if st.button("Actualizar peso", key="cass_btn_update_peso"):
-                try:
-                    st.info(cassandra_crud.actualizar_peso_recoleccion(int(recoleccion_id), nuevo_peso))
-                except Exception as e:
-                    st.error(f"Error: {e}")
+                if recoleccion_id:
+                    try:
+                        st.info(cassandra_crud.actualizar_peso_recoleccion(
+                            str(recoleccion_id), nuevo_peso, session=session
+                        ))
+                    except Exception as e:
+                        st.error(f"Error: {e}")
+                else:
+                    st.error("Ingresá el ID de la recolección.")
 
         elif tipo_update == "Tipo de residuo":
             nuevo_tipo = st.text_input("Nuevo tipo de residuo", key="cass_update_tipo")
             if st.button("Actualizar tipo", key="cass_btn_update_tipo"):
-                if nuevo_tipo:
+                if nuevo_tipo and recoleccion_id:
                     try:
-                        st.info(cassandra_crud.actualizar_tipo_residuo(int(recoleccion_id), nuevo_tipo))
+                        st.info(cassandra_crud.actualizar_tipo_residuo(
+                            str(recoleccion_id), nuevo_tipo, session=session
+                        ))
                     except Exception as e:
                         st.error(f"Error: {e}")
                 else:
-                    st.error("Ingresá el nuevo tipo.")
+                    st.error("Ingresá el ID y el nuevo tipo.")
 
     # ====================================================
     # ELIMINAR
@@ -165,10 +174,15 @@ def render(session):
     with tab4:
         st.subheader("Eliminar recolección")
 
-        recoleccion_id = st.number_input("ID Recolección a eliminar", min_value=1, step=1, key="cass_delete_id")
+        recoleccion_id = st.text_input("ID Recolección a eliminar", key="cass_delete_id")
 
         if st.button("Eliminar recolección", key="cass_btn_delete"):
-            try:
-                st.warning(cassandra_crud.eliminar_recoleccion(int(recoleccion_id)))
-            except Exception as e:
-                st.error(f"Error: {e}")
+            if recoleccion_id:
+                try:
+                    st.warning(cassandra_crud.eliminar_recoleccion(
+                        str(recoleccion_id), session=session
+                    ))
+                except Exception as e:
+                    st.error(f"Error: {e}")
+            else:
+                st.error("Ingresá el ID de la recolección a eliminar.")

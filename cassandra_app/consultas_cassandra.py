@@ -1,5 +1,6 @@
 from cassandra.cluster import Cluster
 
+
 def conectar():
     cluster = Cluster(['localhost'])
     session = cluster.connect('sira')
@@ -23,7 +24,7 @@ def consultar_punto_verde(session, punto_verde_id):
     rows = session.execute("""
         SELECT * FROM recolecciones_por_punto_verde
         WHERE punto_verde_id = %s
-    """, (punto_verde_id,))
+    """, (str(punto_verde_id),))
 
     return list(rows)
 
@@ -32,7 +33,7 @@ def consultar_reciclador(session, reciclador_id):
     rows = session.execute("""
         SELECT * FROM retiros_por_reciclador
         WHERE reciclador_id = %s
-    """, (reciclador_id,))
+    """, (str(reciclador_id),))
 
     return list(rows)
 
@@ -41,7 +42,7 @@ def consultar_zona(session, zona):
     rows = session.execute("""
         SELECT * FROM actividad_por_zona
         WHERE zona = %s
-    """, (zona,))
+    """, (str(zona),))
 
     return list(rows)
 
@@ -67,11 +68,11 @@ def recolecciones_por_tipo(session, usuario_id):
 
 
 def ultimas_recolecciones_usuario(session, usuario_id, limite=5):
-    rows = session.execute("""
-        SELECT * FROM recolecciones_por_usuario
-        WHERE usuario_id = %s
-        LIMIT %s
-    """, (str(usuario_id), limite))
+    limite = int(limite)
+    rows = session.execute(
+        f"SELECT * FROM recolecciones_por_usuario WHERE usuario_id = %s LIMIT {limite}",
+        (str(usuario_id),)
+    )
 
     return list(rows)
 
@@ -79,7 +80,6 @@ def ultimas_recolecciones_usuario(session, usuario_id, limite=5):
 def rango_fechas_punto_verde(session, punto_verde_id):
     rows = consultar_punto_verde(session, punto_verde_id)
 
-    # ejemplo simple de filtrado en Python (Cassandra no filtra libremente)
     return [r for r in rows if r.peso_kg > 20]
 
 

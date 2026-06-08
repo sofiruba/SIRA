@@ -1,25 +1,22 @@
 # SIRA - Sistema Inteligente de Reciclaje Ambiental
 
-SIRA es un proyecto de Ingeniería de Datos II orientado a la gestión inteligente de residuos reciclables. La solución integra distintas bases de datos NoSQL, utilizando cada tecnología según el tipo de información que mejor resuelve.
+SIRA es una plataforma para la gestión inteligente de residuos reciclables en la Ciudad de Buenos Aires. Permite consultar puntos verdes, ver disponibilidad en tiempo real, administrar residuos, analizar relaciones entre entidades y registrar históricos de recolección.
 
-El sistema cuenta con una interfaz visual desarrollada en Python con Streamlit, desde donde se pueden consultar y operar datos almacenados en MongoDB, Neo4j, Redis y Cassandra.
+El proyecto integra distintas bases de datos NoSQL, usando cada una según el tipo de información que mejor resuelve.
 
 ---
 
-## Tecnologías utilizadas
+## Objetivo del proyecto
 
-* Python 3
-* Streamlit
-* Pandas
-* MongoDB
-* Neo4j
-* Redis
-* Cassandra
-* Docker
-* PyMongo
-* Neo4j Python Driver
-* redis-py
-* cassandra-driver
+El objetivo es demostrar una arquitectura NoSQL aplicada a un caso de economía circular y gestión ambiental urbana.
+
+La aplicación permite:
+
+* consultar puntos verdes y residuos aceptados;
+* visualizar disponibilidad y saturación;
+* registrar y consultar recolecciones;
+* analizar relaciones entre usuarios, residuos, puntos verdes y recicladores;
+* administrar datos desde una interfaz visual en Streamlit.
 
 ---
 
@@ -27,22 +24,25 @@ El sistema cuenta con una interfaz visual desarrollada en Python con Streamlit, 
 
 ### MongoDB
 
-MongoDB almacena datos descriptivos y flexibles del sistema, como:
+MongoDB almacena datos descriptivos y flexibles:
 
 * puntos verdes;
-* tipos de residuos;
-* horarios;
+* direcciones;
 * barrios;
 * comunas;
-* residuos aceptados por cada punto verde.
+* horarios;
+* tipos de residuos;
+* residuos aceptados.
+
+Se usa porque permite trabajar con documentos flexibles.
 
 ### Neo4j
 
-Neo4j almacena y consulta relaciones entre entidades, como:
+Neo4j almacena relaciones entre entidades:
 
 * usuarios;
 * puntos verdes;
-* tipos de residuos;
+* residuos;
 * recicladores.
 
 Relaciones principales:
@@ -54,31 +54,111 @@ Relaciones principales:
 * `RETIRA_DE`
 * `TIENE_PUNTO_CERCANO`
 
+Se usa porque permite consultar conexiones entre entidades de forma simple.
+
 ### Redis
 
-Redis se utiliza para información temporal y de acceso rápido:
+Redis almacena información temporal y de acceso rápido:
 
 * estado actual de puntos verdes;
 * capacidad actual;
-* puntos verdes disponibles;
-* puntos verdes saturados;
-* ranking de uso;
+* puntos disponibles;
+* puntos saturados;
+* ranking;
 * alertas recientes.
+
+Las alertas son avisos operativos recientes. No necesariamente todos los puntos saturados tienen una alerta activa.
 
 ### Cassandra
 
-Cassandra se utiliza para datos históricos y consultas orientadas a grandes volúmenes:
+Cassandra almacena datos históricos de recolecciones y retiros.
 
-* recolecciones por usuario;
-* recolecciones por punto verde;
-* recolecciones por ID;
-* retiros por reciclador;
-* actividad por zona;
-* residuos por mes.
+Se modela por consulta, por eso una misma recolección puede guardarse en varias tablas:
+
+* `recolecciones_por_id`
+* `recolecciones_por_usuario`
+* `recolecciones_por_punto_verde`
+* `retiros_por_reciclador`
+* `actividad_por_zona`
+* `residuos_por_mes`
+
+Esto permite consultas rápidas, aunque implique duplicación controlada.
 
 ---
 
-# Instalación y ejecución del proyecto
+## Consistencia entre bases
+
+El sistema no busca consistencia transaccional estricta entre todas las bases.
+
+Cada base cumple una función distinta:
+
+* MongoDB guarda datos descriptivos.
+* Neo4j guarda relaciones.
+* Redis guarda estados temporales.
+* Cassandra guarda históricos.
+
+Por eso no es necesario que todas las bases tengan exactamente los mismos datos.
+
+Sí se mantiene coherencia interna dentro de cada motor. Por ejemplo, en Redis, si un punto pasa a `saturado`, se actualizan los sets correspondientes y puede generarse una alerta. En Cassandra, si se actualiza una recolección, el cambio se replica en las tablas principales donde esa recolección fue almacenada.
+
+---
+
+## Estructura del proyecto
+
+```text
+TPO-INGENIERIA DE DATOS II/
+│
+├── app.py
+├── conexiones.py
+├── README.md
+├── .gitignore
+├── .gitattributes
+│
+├── imagen/
+│   ├── logo_sira.png
+│   └── nombre_sira.png
+│
+├── vistas/
+│   ├── vista_ciudadano.py
+│   ├── vista_administrador.py
+│   ├── seccion_mongo.py
+│   ├── seccion_neo.py
+│   ├── seccion_redis.py
+│   └── seccion_cassandra.py
+│
+├── mongodb_app/
+│   ├── consultas_mongo.py
+│   ├── mongo_crud_app.py
+│   ├── puntos_verdes.json
+│   └── tipos_residuos.json
+│
+├── neo4j_app/
+│   ├── consultas_neo.py
+│   ├── neo_crud_app.py
+│   ├── consultas_terminal_neo.py
+│   ├── crud_terminal_neo.py
+│   ├── puntos_verdes.csv
+│   ├── recicladores.csv
+│   ├── tipos_residuos.csv
+│   └── usuarios_sira.csv
+│
+├── redis_app/
+│   ├── carga_redis.py
+│   ├── consultas_redis.py
+│   ├── redis_crud_app.py
+│   └── redis_data.json
+│
+└── cassandra_app/
+    ├── carga_cassandra.py
+    ├── consultas_cassandra.py
+    ├── cassandra_crud_app.py
+    ├── recolecciones.csv
+    └── retiros.csv
+```
+
+---
+
+# Instalación
 
 ## 1. Clonar el repositorio
 
@@ -87,11 +167,9 @@ git clone https://github.com/sofiruba/SIRA.git
 cd SIRA
 ```
 
----
-
 ## 2. Crear entorno virtual
 
-En macOS/Linux:
+En macOS o Linux:
 
 ```bash
 python3 -m venv .venv
@@ -105,46 +183,25 @@ python -m venv .venv
 .venv\Scripts\activate
 ```
 
----
-
-## 3. Instalar dependencias de Python
-
-Con el entorno virtual activado:
+## 3. Instalar librerías necesarias
 
 ```bash
-python -m pip install --upgrade pip
-python -m pip install streamlit pandas pymongo neo4j redis cassandra-driver
-```
-
-Opcionalmente, si existe un `requirements.txt`:
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-Para generar `requirements.txt`:
-
-```bash
-python -m pip freeze > requirements.txt
+python -m pip install streamlit pandas pymongo neo4j redis cassandra-driver pillow
 ```
 
 ---
 
 # Inicialización de bases de datos
 
-Antes de ejecutar la app, se deben prender las bases de datos.
+## MongoDB
 
----
-
-## 4. Iniciar MongoDB
-
-En macOS con Homebrew:
+Iniciar MongoDB:
 
 ```bash
 brew services start mongodb/brew/mongodb-community@7.0
 ```
 
-Verificar que MongoDB esté funcionando:
+Verificar:
 
 ```bash
 mongosh
@@ -153,48 +210,30 @@ mongosh
 Dentro de `mongosh`:
 
 ```javascript
-show dbs
 use sira
 show collections
 ```
 
-La base utilizada por el proyecto es:
-
-```text
-sira
-```
-
-Para salir de `mongosh`:
+Salir:
 
 ```javascript
 exit
 ```
 
----
+Los datos base se encuentran en:
 
-## 5. Cargar datos en MongoDB
-
-Desde la raíz del proyecto:
-
-```bash
-python mongodb_app/SIRA_mongodb.py
-```
-
-Si el archivo principal de carga está en otra ubicación, ejecutar el script correspondiente dentro de `mongodb_app`.
-
-También puede utilizarse el módulo interactivo si se desea probar operaciones desde consola:
-
-```bash
-python mongodb_app/SIRA_mongodb_interactivo.py
+```text
+mongodb_app/puntos_verdes.json
+mongodb_app/tipos_residuos.json
 ```
 
 ---
 
-## 6. Iniciar Neo4j
+## Neo4j
 
-Abrir **Neo4j Desktop** y hacer clic en **Start** sobre la base de datos del proyecto.
+Abrir **Neo4j Desktop** y hacer clic en **Start** sobre la base del proyecto.
 
-La app se conecta con la siguiente configuración:
+Configuración utilizada:
 
 ```text
 URI: bolt://127.0.0.1:7687
@@ -203,35 +242,32 @@ Contraseña: Homero1234
 Base de datos: sira
 ```
 
-Para verificar desde Neo4j Browser:
+Verificar desde Neo4j Browser:
 
 ```cypher
 MATCH (n) RETURN n LIMIT 10;
 ```
 
-También se puede verificar cantidad de nodos:
+Los archivos base se encuentran en:
 
-```cypher
-MATCH (n) RETURN count(n);
-```
-
-Y cantidad de relaciones:
-
-```cypher
-MATCH ()-[r]->() RETURN count(r);
+```text
+neo4j_app/puntos_verdes.csv
+neo4j_app/recicladores.csv
+neo4j_app/tipos_residuos.csv
+neo4j_app/usuarios_sira.csv
 ```
 
 ---
 
-## 7. Iniciar Redis
+## Redis
 
-En macOS con Homebrew:
+Iniciar Redis:
 
 ```bash
 brew services start redis
 ```
 
-Verificar que Redis esté funcionando:
+Verificar:
 
 ```bash
 redis-cli ping
@@ -243,45 +279,20 @@ Debe responder:
 PONG
 ```
 
----
-
-## 8. Cargar datos en Redis
-
-Desde la raíz del proyecto:
+Cargar datos:
 
 ```bash
-python redis_app/carga_Redis.py
+python redis_app/carga_redis.py
 ```
 
-El script carga los datos desde:
-
-```text
-redis_data.json
-```
-
-Para verificar las claves cargadas:
+Ver claves cargadas:
 
 ```bash
 redis-cli
-```
-
-Dentro de Redis:
-
-```bash
 KEYS *
 ```
 
-Deberían aparecer claves similares a:
-
-```text
-puntoverde:1:estado
-puntosverdes:disponibles
-puntosverdes:saturados
-ranking:puntosverdes:uso
-alertas:recientes
-```
-
-Para salir de Redis CLI:
+Salir:
 
 ```bash
 exit
@@ -289,9 +300,9 @@ exit
 
 ---
 
-## 9. Iniciar Docker
+## Cassandra
 
-Cassandra se ejecuta mediante Docker. Primero abrir **Docker Desktop** y esperar a que esté activo.
+Cassandra se ejecuta con Docker. Primero abrir **Docker Desktop**.
 
 Verificar Docker:
 
@@ -299,34 +310,10 @@ Verificar Docker:
 docker ps
 ```
 
-Si Docker está funcionando, se mostrará una tabla de contenedores.
-
----
-
-## 10. Iniciar Cassandra
-
-El contenedor de Cassandra utilizado por el proyecto se llama:
-
-```text
-sira
-```
-
-Prender el contenedor:
+Iniciar el contenedor:
 
 ```bash
 docker start sira
-```
-
-Verificar que esté corriendo:
-
-```bash
-docker ps
-```
-
-Debe aparecer un contenedor con imagen `cassandra:4.1` y puerto:
-
-```text
-0.0.0.0:9042->9042/tcp
 ```
 
 Entrar a Cassandra:
@@ -335,21 +322,11 @@ Entrar a Cassandra:
 docker exec -it sira cqlsh
 ```
 
----
-
-## 11. Crear keyspace de Cassandra
-
-Dentro de `cqlsh`, crear el keyspace si no existe:
+Crear el keyspace si no existe:
 
 ```sql
 CREATE KEYSPACE IF NOT EXISTS sira
 WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
-```
-
-Verificar que exista:
-
-```sql
-DESCRIBE KEYSPACES;
 ```
 
 Entrar al keyspace:
@@ -358,7 +335,7 @@ Entrar al keyspace:
 USE sira;
 ```
 
-Para ver tablas:
+Ver tablas:
 
 ```sql
 DESCRIBE TABLES;
@@ -370,63 +347,34 @@ Salir:
 exit;
 ```
 
----
-
-## 12. Cargar datos en Cassandra
-
-Desde la raíz del proyecto:
+Cargar datos:
 
 ```bash
 python cassandra_app/carga_cassandra.py
 ```
 
-Este script crea las tablas necesarias y carga los datos desde los archivos CSV ubicados en `cassandra_app`, como:
-
-```text
-cassandra_app/recolecciones.csv
-cassandra_app/retiros.csv
-```
-
----
-
-## 13. Probar consultas de Cassandra
-
-```bash
-python cassandra_app/consultas_cassandra.py
-```
-
-También se puede verificar manualmente desde `cqlsh`:
+Verificar:
 
 ```bash
 docker exec -it sira cqlsh
 ```
 
-Dentro de Cassandra:
-
 ```sql
 USE sira;
-DESCRIBE TABLES;
 SELECT * FROM recolecciones_por_id LIMIT 10;
-SELECT * FROM recolecciones_por_usuario LIMIT 10;
-```
-
-Para buscar una recolección por ID:
-
-```sql
-SELECT * FROM recolecciones_por_id WHERE recoleccion_id = '30';
 ```
 
 ---
 
-# Ejecutar la aplicación visual
+# Ejecutar la aplicación
 
-Con todas las bases iniciadas, ejecutar Streamlit desde la raíz del proyecto:
+Con las bases iniciadas, ejecutar:
 
 ```bash
 python -m streamlit run app.py
 ```
 
-Luego abrir en el navegador la URL indicada por Streamlit, normalmente:
+Abrir la URL indicada por Streamlit, normalmente:
 
 ```text
 http://localhost:8501
@@ -434,240 +382,104 @@ http://localhost:8501
 
 ---
 
-# Orden recomendado para levantar todo
-
-## Paso 1: Activar entorno virtual
+# Orden recomendado para correr la demo
 
 ```bash
 source .venv/bin/activate
-```
-
-## Paso 2: Prender MongoDB
-
-```bash
 brew services start mongodb/brew/mongodb-community@7.0
-```
-
-## Paso 3: Prender Redis
-
-```bash
 brew services start redis
-```
-
-## Paso 4: Prender Docker Desktop
-
-Abrir Docker Desktop manualmente y verificar:
-
-```bash
-docker ps
-```
-
-## Paso 5: Prender Cassandra
-
-```bash
 docker start sira
-```
-
-## Paso 6: Prender Neo4j
-
-Abrir Neo4j Desktop y hacer clic en **Start** sobre la base `sira`.
-
-## Paso 7: Correr la app
-
-```bash
+python redis_app/carga_redis.py
+python cassandra_app/carga_cassandra.py
 python -m streamlit run app.py
 ```
 
----
-
-# Comandos útiles para verificar cada base
-
-## MongoDB
-
-```bash
-mongosh
-```
-
-```javascript
-use sira
-show collections
-```
+Además, iniciar Neo4j manualmente desde **Neo4j Desktop**.
 
 ---
 
-## Redis
+# Funcionalidades principales
 
-```bash
-redis-cli ping
-```
+## Inicio
 
-```bash
-redis-cli
-KEYS *
-```
+Muestra una presentación general del sistema y métricas principales:
 
----
+* puntos verdes;
+* tipos de residuos;
+* puntos disponibles;
+* puntos saturados.
 
-## Cassandra
+## Portal del ciudadano
 
-```bash
-docker exec -it sira cqlsh
-```
+Permite:
 
-```sql
-USE sira;
-DESCRIBE TABLES;
-```
+* buscar puntos verdes y residuos con MongoDB;
+* consultar estados en tiempo real con Redis;
+* visualizar comunidad y relaciones con Neo4j.
 
----
+## Panel del administrador
 
-## Neo4j
+Permite:
 
-Desde Neo4j Browser:
-
-```cypher
-MATCH (n) RETURN count(n);
-MATCH ()-[r]->() RETURN count(r);
-```
+* gestionar puntos verdes y residuos con MongoDB;
+* gestionar nodos y relaciones con Neo4j;
+* monitorear estados y alertas con Redis;
+* registrar y consultar recolecciones históricas con Cassandra.
 
 ---
 
 # Apagar servicios
 
-## Apagar MongoDB
+## MongoDB
 
 ```bash
 brew services stop mongodb/brew/mongodb-community@7.0
 ```
 
-## Apagar Redis
+## Redis
 
 ```bash
 brew services stop redis
 ```
 
-## Apagar Cassandra
+## Cassandra
 
 ```bash
 docker stop sira
 ```
 
-## Apagar Neo4j
+## Neo4j
 
-Desde Neo4j Desktop, hacer clic en **Stop** sobre la base de datos.
+Desde **Neo4j Desktop**, hacer clic en **Stop**.
 
----
+## Streamlit
 
-# Estructura general del proyecto
+En la terminal donde está corriendo la app:
 
-```text
-SIRA/
-│
-├── app.py
-├── conexiones.py
-├── README.md
-│
-├── mongodb_app/
-│   ├── SIRA_mongodb.py
-│   ├── SIRA_mongodb_funciones.py
-│   └── SIRA_mongodb_interactivo.py
-│
-├── neo4j_app/
-│   ├── consultas_neo.py
-│   ├── consultas_terminal_neo.py
-│   ├── crud_terminal_neo.py
-│   ├── neo_crud_app.py
-│   ├── puntos_verdes.csv
-│   ├── recicladores.csv
-│   ├── tipos_residuos.csv
-│   └── usuarios_sira.csv
-│
-├── redis_app/
-│   ├── carga_Redis.py
-│   └── redis_data.json
-│
-├── cassandra_app/
-│   ├── carga_cassandra.py
-│   ├── consultas_cassandra.py
-│   ├── cassandra_crud_app.py
-│   ├── recolecciones.csv
-│   └── retiros.csv
-│
-└── .venv/
+```bash
+CTRL + C
 ```
 
 ---
 
-# Funcionalidades de la app
+# Explicación técnica para la defensa
 
-## MongoDB
+SIRA utiliza una arquitectura NoSQL distribuida por responsabilidades.
 
-Desde la interfaz se puede:
+MongoDB se usa para documentos flexibles, Neo4j para relaciones, Redis para estados temporales y Cassandra para históricos modelados por consulta.
 
-* consultar puntos verdes;
-* consultar tipos de residuos;
-* buscar punto verde por ID;
-* crear residuos;
-* crear puntos verdes;
-* actualizar horarios;
-* actualizar residuos;
-* eliminar puntos verdes;
-* eliminar residuos.
+En Cassandra, las tablas se diseñan según las consultas. Por eso una misma recolección puede estar duplicada en distintas tablas. Esto permite consultar rápido por ID, usuario o punto verde, aunque requiere actualizar o eliminar el dato en las tablas principales donde fue almacenado.
 
-## Neo4j
-
-Desde la interfaz se puede:
-
-* consultar puntos verdes cercanos;
-* consultar usuarios por barrio;
-* consultar puntos verdes por comuna;
-* ver top de usuarios;
-* consultar usuarios y residuos reciclados;
-* consultar puntos verdes y residuos aceptados;
-* consultar recicladores y residuos;
-* consultar residuos más reciclados;
-* crear usuarios;
-* crear relaciones;
-* actualizar puntos ecológicos;
-* eliminar usuarios;
-* eliminar relaciones.
-
-## Redis
-
-Desde la interfaz se puede:
-
-* cargar datos desde JSON;
-* consultar estado de un punto verde;
-* consultar puntos disponibles;
-* consultar puntos saturados;
-* consultar ranking de uso;
-* consultar alertas recientes;
-* actualizar estado y capacidad;
-* eliminar estado temporal de un punto verde;
-* eliminar alertas.
-
-## Cassandra
-
-Desde la interfaz se puede:
-
-* cargar datos históricos;
-* consultar recolecciones por usuario;
-* consultar recolecciones por punto verde;
-* consultar recolecciones por ID;
-* consultar retiros por reciclador;
-* consultar actividad por zona;
-* crear nuevas recolecciones;
-* consultar datos históricos modelados por query.
+En Redis, los datos representan estados temporales. Las alertas recientes son avisos operativos para el administrador y no necesariamente coinciden uno a uno con todos los puntos saturados.
 
 ---
 
 # Notas importantes
 
-* La base de datos principal se llama `sira`.
-* El contenedor de Cassandra se llama `sira`.
+* La base principal se llama `sira`.
+* El contenedor Docker de Cassandra se llama `sira`.
+* Neo4j debe iniciarse desde Neo4j Desktop.
+* Redis, MongoDB y Cassandra deben estar activos antes de ejecutar la app.
 * Cassandra puede tardar algunos minutos en iniciar.
-* Redis y MongoDB deben estar prendidos antes de ejecutar la app.
-* Neo4j debe estar iniciado desde Neo4j Desktop.
-* La app utiliza Streamlit como interfaz visual.
-* El sistema no implementa consistencia transaccional estricta entre bases, ya que el objetivo es demostrar el uso de cada motor NoSQL según su propósito.
-* Cada base se modela de acuerdo con el tipo de consulta que debe resolver.
+* La aplicación principal se ejecuta con `app.py`.
+* Los datos son simulados y se utilizan para demostrar el funcionamiento de la arquitectura NoSQL.

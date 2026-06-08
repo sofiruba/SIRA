@@ -12,11 +12,11 @@ def crear_recoleccion(recoleccion_id, usuario_id, punto_verde_id, fecha_recolecc
     """)
 
     session.execute(query, (
-        recoleccion_id,
-        str(usuario_id),
-        punto_verde_id,
+        int(recoleccion_id),        # INT en Cassandra
+        int(usuario_id),            # INT en Cassandra
+        int(punto_verde_id),        # INT en Cassandra
         pd.to_datetime(fecha_recoleccion),
-        tipo_residuo,
+        str(tipo_residuo),
         float(peso_kg)
     ))
 
@@ -31,12 +31,7 @@ def obtener_recoleccion_por_id(recoleccion_id):
     WHERE recoleccion_id = ?
     """)
 
-    row = session.execute(query, (recoleccion_id,)).one()
-
-    if not row:
-        return None
-
-    return row
+    return session.execute(query, (int(recoleccion_id),)).one()
 
 
 def obtener_recolecciones_por_usuario(usuario_id):
@@ -59,7 +54,7 @@ def actualizar_peso_recoleccion(recoleccion_id, nuevo_peso):
     WHERE recoleccion_id = ?
     """)
 
-    session.execute(query, (float(nuevo_peso), recoleccion_id))
+    session.execute(query, (float(nuevo_peso), int(recoleccion_id)))
 
     return "Peso actualizado correctamente"
 
@@ -73,7 +68,7 @@ def actualizar_tipo_residuo(recoleccion_id, nuevo_tipo):
     WHERE recoleccion_id = ?
     """)
 
-    session.execute(query, (nuevo_tipo, recoleccion_id))
+    session.execute(query, (str(nuevo_tipo), int(recoleccion_id)))
 
     return "Tipo de residuo actualizado correctamente"
 
@@ -86,6 +81,6 @@ def eliminar_recoleccion(recoleccion_id):
     WHERE recoleccion_id = ?
     """)
 
-    session.execute(query, (recoleccion_id,))
+    session.execute(query, (int(recoleccion_id),))
 
     return f"Recolección {recoleccion_id} eliminada correctamente"

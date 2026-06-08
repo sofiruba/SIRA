@@ -1,23 +1,39 @@
+import io
+import contextlib
 import streamlit as st
 import mongodb_app.consultas_mongo as mongo
 import mongodb_app.mongo_crud_app as mongo_crud
- 
- 
+
+
+def _capturar_salida(funcion, *args):
+    salida = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(salida):
+            funcion(*args)
+        texto = salida.getvalue()
+        if texto.strip():
+            st.code(texto, language="text")
+        else:
+            st.warning("La consulta no devolvió resultados.")
+    except Exception as e:
+        st.error(f"Error: {e}")
+
+
 def render(coleccion_puntos, coleccion_residuos):
     st.title("🍃 MongoDB")
     st.write("""
     MongoDB almacena información flexible y descriptiva,
     como puntos verdes, residuos aceptados, horarios, barrios y comunas.
     """)
- 
+
     tab1, tab2, tab3, tab4 = st.tabs(["Consultas", "Crear", "Actualizar", "Eliminar"])
- 
+
     # ====================================================
     # CONSULTAS
     # ====================================================
     with tab1:
         st.subheader("Consultas MongoDB")
- 
+
         opcion = st.selectbox(
             "Seleccioná una consulta",
             [
@@ -36,34 +52,33 @@ def render(coleccion_puntos, coleccion_residuos):
             ],
             key="mongo_select_consulta"
         )
- 
+
         if opcion == "Buscar punto verde por ID":
             id_punto_buscar = st.number_input("ID del punto verde", min_value=1, step=1, key="mongo_buscar_id")
         elif opcion == "Buscar puntos verdes por barrio":
             barrio_buscar = st.text_input("Barrio", key="mongo_buscar_barrio")
         elif opcion == "Buscar residuo por nombre":
             nombre_buscar = st.text_input("Nombre del residuo", key="mongo_buscar_residuo_nombre")
- 
+
         if st.button("Ejecutar consulta MongoDB", key="mongo_btn_consulta"):
-            from app import capturar_salida
             if opcion.startswith("Consulta 1"):
-                capturar_salida(mongo.consulta1, coleccion_puntos)
+                _capturar_salida(mongo.consulta1, coleccion_puntos)
             elif opcion.startswith("Consulta 2"):
-                capturar_salida(mongo.consulta2, coleccion_puntos)
+                _capturar_salida(mongo.consulta2, coleccion_puntos)
             elif opcion.startswith("Consulta 3"):
-                capturar_salida(mongo.consulta3, coleccion_puntos)
+                _capturar_salida(mongo.consulta3, coleccion_puntos)
             elif opcion.startswith("Consulta 4"):
-                capturar_salida(mongo.consulta4, coleccion_puntos)
+                _capturar_salida(mongo.consulta4, coleccion_puntos)
             elif opcion.startswith("Consulta 5"):
-                capturar_salida(mongo.consulta5, coleccion_puntos)
+                _capturar_salida(mongo.consulta5, coleccion_puntos)
             elif opcion.startswith("Consulta 6"):
-                capturar_salida(mongo.consulta6, coleccion_residuos)
+                _capturar_salida(mongo.consulta6, coleccion_residuos)
             elif opcion.startswith("Consulta 7"):
-                capturar_salida(mongo.consulta7, coleccion_residuos)
+                _capturar_salida(mongo.consulta7, coleccion_residuos)
             elif opcion.startswith("Consulta 8"):
-                capturar_salida(mongo.consulta8, coleccion_residuos)
+                _capturar_salida(mongo.consulta8, coleccion_residuos)
             elif opcion.startswith("Consulta 9"):
-                capturar_salida(mongo.consulta9, coleccion_residuos)
+                _capturar_salida(mongo.consulta9, coleccion_residuos)
             elif opcion == "Buscar punto verde por ID":
                 punto = mongo_crud.buscar_punto_verde_por_id(int(id_punto_buscar))
                 if punto:
@@ -90,30 +105,30 @@ def render(coleccion_puntos, coleccion_residuos):
                         st.warning("No se encontraron residuos con ese nombre.")
                 else:
                     st.error("Ingresá un nombre de residuo.")
- 
+
     # ====================================================
     # CREAR
     # ====================================================
     with tab2:
         st.subheader("Crear datos en MongoDB")
- 
+
         tipo = st.selectbox(
             "Qué querés crear",
             ["Residuo", "Punto verde", "Muchos puntos verdes (JSON)", "Muchos residuos (JSON)"],
             key="mongo_select_crear"
         )
- 
+
         if tipo == "Residuo":
             nombre = st.text_input("Nombre del residuo", key="mongo_crear_res_nombre")
             color = st.text_input("Color del contenedor", key="mongo_crear_res_color")
             categoria = st.text_input("Categoría", key="mongo_crear_res_categoria")
- 
+
             if st.button("Crear residuo", key="mongo_btn_crear_residuo"):
                 if nombre and color and categoria:
                     st.success(mongo_crud.crear_residuo(nombre, color, categoria))
                 else:
                     st.error("Completá todos los campos.")
- 
+
         elif tipo == "Punto verde":
             nombre = st.text_input("Nombre", key="mongo_crear_pv_nombre")
             direccion = st.text_input("Dirección", key="mongo_crear_pv_dir")
@@ -123,7 +138,7 @@ def render(coleccion_puntos, coleccion_residuos):
             dias = st.text_input("Días de atención", placeholder="Lunes,Martes,Sabado", key="mongo_crear_pv_dias")
             apertura = st.text_input("Hora apertura", placeholder="09:00", key="mongo_crear_pv_apertura")
             cierre = st.text_input("Hora cierre", placeholder="18:00", key="mongo_crear_pv_cierre")
- 
+
             if st.button("Crear punto verde", key="mongo_btn_crear_pv"):
                 if all([nombre, direccion, barrio, comuna, residuos, dias, apertura, cierre]):
                     lista_residuos = [r.strip().upper() for r in residuos.split(",")]
@@ -176,36 +191,36 @@ def render(coleccion_puntos, coleccion_residuos):
                         st.error("El JSON ingresado no es válido.")
                 else:
                     st.error("Ingresá el JSON.")
- 
+
     # ====================================================
     # ACTUALIZAR
     # ====================================================
     with tab3:
         st.subheader("Actualizar datos en MongoDB")
- 
+
         tipo_update = st.selectbox(
             "Qué querés actualizar",
             ["Horario de punto verde", "Tipo de residuo", "Agregar campo activo", "Eliminar campo activo"],
             key="mongo_select_update"
         )
- 
+
         if tipo_update == "Horario de punto verde":
             id_punto = st.number_input("ID del punto verde", min_value=1, step=1, key="mongo_update_pv_id")
             apertura = st.text_input("Nueva hora apertura", placeholder="09:00", key="mongo_update_apertura")
             cierre = st.text_input("Nueva hora cierre", placeholder="18:00", key="mongo_update_cierre")
- 
+
             if st.button("Actualizar horario", key="mongo_btn_update_horario"):
                 if apertura and cierre:
                     st.info(mongo_crud.actualizar_horario_punto(int(id_punto), apertura, cierre))
                 else:
                     st.error("Completá apertura y cierre.")
- 
+
         elif tipo_update == "Tipo de residuo":
             id_res = st.text_input("ID del residuo", placeholder="R1", key="mongo_update_res_id")
             nombre = st.text_input("Nuevo nombre", key="mongo_update_res_nombre")
             color = st.text_input("Nuevo color", key="mongo_update_res_color")
             categoria = st.text_input("Nueva categoría", key="mongo_update_res_cat")
- 
+
             if st.button("Actualizar residuo", key="mongo_btn_update_res"):
                 if all([id_res, nombre, color, categoria]):
                     st.info(mongo_crud.actualizar_residuo(id_res.upper(), nombre, color, categoria))
@@ -221,24 +236,24 @@ def render(coleccion_puntos, coleccion_residuos):
             st.write("Elimina el campo `activo` de todos los puntos verdes.")
             if st.button("Eliminar campo activo", key="mongo_btn_eliminar_activo"):
                 st.warning(mongo_crud.eliminar_campo_activo(coleccion_puntos))
- 
+
     # ====================================================
     # ELIMINAR
     # ====================================================
     with tab4:
         st.subheader("Eliminar datos en MongoDB")
- 
+
         tipo_delete = st.selectbox(
             "Qué querés eliminar",
             ["Punto verde", "Tipo de residuo", "Muchos puntos verdes", "Muchos residuos"],
             key="mongo_select_delete"
         )
- 
+
         if tipo_delete == "Punto verde":
             id_punto = st.number_input("ID del punto verde a eliminar", min_value=1, step=1, key="mongo_delete_pv_id")
             if st.button("Eliminar punto verde", key="mongo_btn_delete_pv"):
                 st.warning(mongo_crud.eliminar_punto_verde(int(id_punto)))
- 
+
         elif tipo_delete == "Tipo de residuo":
             id_res = st.text_input("ID del residuo a eliminar", placeholder="R17", key="mongo_delete_res_id")
             if st.button("Eliminar residuo", key="mongo_btn_delete_res"):

@@ -22,7 +22,6 @@ def crear_recoleccion(
     tipo_residuo = str(tipo_residuo)
     peso_kg = float(peso_kg)
 
-    # 1. Insertar por ID
     query_id = session.prepare("""
         INSERT INTO recolecciones_por_id
         (recoleccion_id, usuario_id, punto_verde_id, fecha_recoleccion, tipo_residuo, peso_kg)
@@ -38,7 +37,6 @@ def crear_recoleccion(
         peso_kg
     ))
 
-    # 2. Insertar por usuario
     query_usuario = session.prepare("""
         INSERT INTO recolecciones_por_usuario
         (usuario_id, fecha_recoleccion, recoleccion_id, punto_verde_id, tipo_residuo, peso_kg)
@@ -54,7 +52,6 @@ def crear_recoleccion(
         peso_kg
     ))
 
-    # 3. Insertar por punto verde
     query_punto = session.prepare("""
         INSERT INTO recolecciones_por_punto_verde
         (punto_verde_id, fecha_recoleccion, recoleccion_id, usuario_id, tipo_residuo, peso_kg)
@@ -72,13 +69,15 @@ def crear_recoleccion(
 
     return f"Recolección {recoleccion_id} creada correctamente"
 
+
 def obtener_recoleccion_por_id(recoleccion_id, session=None):
     if session is None:
         session = obtener_cassandra_session()
 
     query = session.prepare("""
-    SELECT * FROM recolecciones_por_id
-    WHERE recoleccion_id = ?
+        SELECT *
+        FROM recolecciones_por_id
+        WHERE recoleccion_id = ?
     """)
 
     return session.execute(query, (str(recoleccion_id),)).one()
@@ -89,8 +88,9 @@ def obtener_recolecciones_por_usuario(usuario_id, session=None):
         session = obtener_cassandra_session()
 
     query = session.prepare("""
-    SELECT * FROM recolecciones_por_usuario
-    WHERE usuario_id = ?
+        SELECT *
+        FROM recolecciones_por_usuario
+        WHERE usuario_id = ?
     """)
 
     return list(session.execute(query, (str(usuario_id),)))
@@ -100,41 +100,170 @@ def actualizar_peso_recoleccion(recoleccion_id, nuevo_peso, session=None):
     if session is None:
         session = obtener_cassandra_session()
 
-    query = session.prepare("""
-    UPDATE recolecciones_por_id
-    SET peso_kg = ?
-    WHERE recoleccion_id = ?
+    recoleccion_id = str(recoleccion_id)
+    nuevo_peso = float(nuevo_peso)
+
+    row = obtener_recoleccion_por_id(recoleccion_id, session=session)
+
+    if row is None:
+        return f"No se encontró la recolección {recoleccion_id}"
+
+    usuario_id = str(row.usuario_id)
+    punto_verde_id = str(row.punto_verde_id)
+    fecha_recoleccion = row.fecha_recoleccion
+
+    query_id = session.prepare("""
+        UPDATE recolecciones_por_id
+        SET peso_kg = ?
+        WHERE recoleccion_id = ?
     """)
 
-    session.execute(query, (float(nuevo_peso), str(recoleccion_id)))
+    session.execute(query_id, (
+        nuevo_peso,
+        recoleccion_id
+    ))
 
-    return "Peso actualizado correctamente"
+    query_usuario = session.prepare("""
+        UPDATE recolecciones_por_usuario
+        SET peso_kg = ?
+        WHERE usuario_id = ?
+        AND fecha_recoleccion = ?
+        AND recoleccion_id = ?
+    """)
+
+    session.execute(query_usuario, (
+        nuevo_peso,
+        usuario_id,
+        fecha_recoleccion,
+        recoleccion_id
+    ))
+
+    query_punto = session.prepare("""
+        UPDATE recolecciones_por_punto_verde
+        SET peso_kg = ?
+        WHERE punto_verde_id = ?
+        AND fecha_recoleccion = ?
+        AND recoleccion_id = ?
+    """)
+
+    session.execute(query_punto, (
+        nuevo_peso,
+        punto_verde_id,
+        fecha_recoleccion,
+        recoleccion_id
+    ))
+
+    return f"Peso de la recolección {recoleccion_id} actualizado correctamente"
 
 
 def actualizar_tipo_residuo(recoleccion_id, nuevo_tipo, session=None):
     if session is None:
         session = obtener_cassandra_session()
 
-    query = session.prepare("""
-    UPDATE recolecciones_por_id
-    SET tipo_residuo = ?
-    WHERE recoleccion_id = ?
+    recoleccion_id = str(recoleccion_id)
+    nuevo_tipo = str(nuevo_tipo)
+
+    row = obtener_recoleccion_por_id(recoleccion_id, session=session)
+
+    if row is None:
+        return f"No se encontró la recolección {recoleccion_id}"
+
+    usuario_id = str(row.usuario_id)
+    punto_verde_id = str(row.punto_verde_id)
+    fecha_recoleccion = row.fecha_recoleccion
+
+    query_id = session.prepare("""
+        UPDATE recolecciones_por_id
+        SET tipo_residuo = ?
+        WHERE recoleccion_id = ?
     """)
 
-    session.execute(query, (str(nuevo_tipo), str(recoleccion_id)))
+    session.execute(query_id, (
+        nuevo_tipo,
+        recoleccion_id
+    ))
 
-    return "Tipo de residuo actualizado correctamente"
+    query_usuario = session.prepare("""
+        UPDATE recolecciones_por_usuario
+        SET tipo_residuo = ?
+        WHERE usuario_id = ?
+        AND fecha_recoleccion = ?
+        AND recoleccion_id = ?
+    """)
+
+    session.execute(query_usuario, (
+        nuevo_tipo,
+        usuario_id,
+        fecha_recoleccion,
+        recoleccion_id
+    ))
+
+    query_punto = session.prepare("""
+        UPDATE recolecciones_por_punto_verde
+        SET tipo_residuo = ?
+        WHERE punto_verde_id = ?
+        AND fecha_recoleccion = ?
+        AND recoleccion_id = ?
+    """)
+
+    session.execute(query_punto, (
+        nuevo_tipo,
+        punto_verde_id,
+        fecha_recoleccion,
+        recoleccion_id
+    ))
+
+    return f"Tipo de residuo de la recolección {recoleccion_id} actualizado correctamente"
 
 
 def eliminar_recoleccion(recoleccion_id, session=None):
     if session is None:
         session = obtener_cassandra_session()
 
-    query = session.prepare("""
-    DELETE FROM recolecciones_por_id
-    WHERE recoleccion_id = ?
+    recoleccion_id = str(recoleccion_id)
+
+    row = obtener_recoleccion_por_id(recoleccion_id, session=session)
+
+    if row is None:
+        return f"No se encontró la recolección {recoleccion_id}"
+
+    usuario_id = str(row.usuario_id)
+    punto_verde_id = str(row.punto_verde_id)
+    fecha_recoleccion = row.fecha_recoleccion
+
+    query_id = session.prepare("""
+        DELETE FROM recolecciones_por_id
+        WHERE recoleccion_id = ?
     """)
 
-    session.execute(query, (str(recoleccion_id),))
+    session.execute(query_id, (
+        recoleccion_id,
+    ))
+
+    query_usuario = session.prepare("""
+        DELETE FROM recolecciones_por_usuario
+        WHERE usuario_id = ?
+        AND fecha_recoleccion = ?
+        AND recoleccion_id = ?
+    """)
+
+    session.execute(query_usuario, (
+        usuario_id,
+        fecha_recoleccion,
+        recoleccion_id
+    ))
+
+    query_punto = session.prepare("""
+        DELETE FROM recolecciones_por_punto_verde
+        WHERE punto_verde_id = ?
+        AND fecha_recoleccion = ?
+        AND recoleccion_id = ?
+    """)
+
+    session.execute(query_punto, (
+        punto_verde_id,
+        fecha_recoleccion,
+        recoleccion_id
+    ))
 
     return f"Recolección {recoleccion_id} eliminada correctamente"

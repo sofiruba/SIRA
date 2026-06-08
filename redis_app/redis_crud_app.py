@@ -1,6 +1,6 @@
 from datetime import datetime
+import json
 from redis_app import carga_redis as redis_mod
-
 
 def actualizar_estado_punto(id_punto, estado, capacidad_actual):
     id_punto = str(id_punto)
@@ -27,6 +27,14 @@ def actualizar_estado_punto(id_punto, estado, capacidad_actual):
     elif estado == "saturado":
         redis_mod.r.sadd("puntosverdes:saturados", id_punto)
 
+        nueva_alerta = {
+            "tipo": "saturacion",
+            "punto_verde": int(id_punto) if id_punto.isdigit() else id_punto,
+            "mensaje": f"El punto verde alcanzó el {capacidad_actual}% de capacidad"
+        }
+        
+        redis_mod.r.lpush("alertas:recientes", json.dumps(nueva_alerta))
+
     return f"Estado del punto verde {id_punto} actualizado correctamente."
 
 
@@ -37,6 +45,15 @@ def eliminar_estado_punto(id_punto):
     redis_mod.r.srem("puntosverdes:disponibles", id_punto)
     redis_mod.r.srem("puntosverdes:saturados", id_punto)
     redis_mod.r.zrem("ranking:puntosverdes:uso", id_punto)
+
+    nueva_alerta = {
+        "tipo": "eliminacion",
+        "punto_verde": int(id_punto) if id_punto.isdigit() else id_punto,
+        "mensaje": f"El punto verde {id_punto} ha sido eliminado del sistema"
+    }
+    
+
+    redis_mod.r.lpush("alertas:recientes", json.dumps(nueva_alerta))
 
     return f"Datos temporales del punto verde {id_punto} eliminados de Redis."
 

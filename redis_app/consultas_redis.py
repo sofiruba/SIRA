@@ -16,5 +16,16 @@ def obtener_ranking():
     return r.zrevrange("ranking:puntosverdes:uso", 0, -1, withscores=True)
 
 def obtener_alertas():
-    alertas = r.lrange("alertas:recientes", 0, -1)
-    return [json.loads(a) for a in alertas]
+    # 1. Traemos todos los elementos de la lista en Redis (del primero al último)
+    alertas_raw = redis_mod.r.lrange("alertas:recientes", 0, -1)
+    
+    if not alertas_raw:
+        return []
+
+    alertas_decodificadas = []
+    
+    for alerta in alertas_raw:
+        alerta_dict = json.loads(alerta.decode('utf-8'))
+        alertas_decodificadas.append(alerta_dict)
+        
+    return alertas_decodificadas

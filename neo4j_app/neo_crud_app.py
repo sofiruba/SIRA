@@ -1,40 +1,42 @@
 from conexiones import obtener_driver_neo4j, NEO4J_DATABASE
- 
- 
+
 def ejecutar_write(query, parametros=None):
     driver = obtener_driver_neo4j()
- 
     try:
+        # Usamos un bloque contextual para la sesión
         with driver.session(database=NEO4J_DATABASE) as session:
-            resultado = session.run(query, parametros or {})
-            return [dict(fila) for fila in resultado]
+            # execute_write asegura que los cambios se guarden de forma atómica en el disco
+            def transaccion(tx):
+                resultado = tx.run(query, parametros or {})
+                return [dict(fila) for fila in resultado]
+            return session.execute_write(transaccion)
     finally:
         driver.close()
- 
- 
+
+
 def siguiente_id(etiqueta, campo):
     driver = obtener_driver_neo4j()
- 
     try:
         with driver.session(database=NEO4J_DATABASE) as session:
-            resultado = session.run(
-                f"MATCH (n:{etiqueta}) RETURN coalesce(max(n.{campo}), 0) AS ultimo"
-            )
-            return resultado.single()["ultimo"] + 1
+            def transaccion(tx):
+                resultado = tx.run(f"MATCH (n:{etiqueta}) RETURN coalesce(max(n.{campo}), 0) AS ultimo")
+                return resultado.single()["ultimo"] + 1
+            return session.execute_read(transaccion) # Para leer usamos execute_read
     finally:
         driver.close()
- 
- 
+
+
 # ══════════════════════════════════════════════════════════════════════════════
-#  USUARIO
+#  USUARIO (CORREGIDO)
 # ══════════════════════════════════════════════════════════════════════════════
- 
+
 def crear_usuario(nombre, email, barrio, comuna):
     nuevo_id = siguiente_id("Usuario", "id_usuario")
- 
+
+    # Nos aseguramos de que las variables coincidan perfectamente
     ejecutar_write("""
         CREATE (u:Usuario {
-            id_usuario: $id,
+            id_usuario: $id_usuario,
             nombre: $nombre,
             email: $email,
             barrio: $barrio,
@@ -43,43 +45,41 @@ def crear_usuario(nombre, email, barrio, comuna):
             nivel_usuario: 'Novato'
         })
     """, {
-        "id": nuevo_id,
+        "id_usuario": nuevo_id,
         "nombre": nombre,
         "email": email,
         "barrio": barrio,
         "comuna": comuna
     })
- 
+
     return f"Usuario creado correctamente con ID {nuevo_id}"
- 
- 
+
+
 def actualizar_puntos_usuario(id_usuario, puntos):
     datos = ejecutar_write("""
-        MATCH (u:Usuario {id_usuario: $id})
+        MATCH (u:Usuario {id_usuario: $id_usuario})
         SET u.puntos_ecologicos = $puntos
         RETURN u.nombre AS nombre
     """, {
-        "id": id_usuario,
-        "puntos": puntos
+        "id_usuario": int(id_usuario), # Forzamos entero por si Streamlit lo envía como string
+        "puntos": int(puntos)
     })
- 
+
     if datos:
         return f"Usuario actualizado: {datos[0]['nombre']}"
- 
+
     return "No se encontró el usuario."
- 
- 
+
+
 def eliminar_usuario(id_usuario):
     ejecutar_write("""
-        MATCH (u:Usuario {id_usuario: $id})
+        MATCH (u:Usuario {id_usuario: $id_usuario})
         DETACH DELETE u
     """, {
-        "id": id_usuario
+        "id_usuario": int(id_usuario)
     })
- 
+
     return "Usuario eliminado correctamente."
- 
- 
 # ══════════════════════════════════════════════════════════════════════════════
 #  TIPO DE RESIDUO
 # ══════════════════════════════════════════════════════════════════════════════
